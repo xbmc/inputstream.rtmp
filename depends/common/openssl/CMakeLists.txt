@@ -16,8 +16,8 @@ endif()
 
 if(CORE_SYSTEM_NAME MATCHES "ios")
   set(configure_command CC=${CMAKE_COMPILER} AR=${CMAKE_AR} <SOURCE_DIR>/Configure iphoneos-cross zlib no-asm no-krb5 --openssldir=${OUTPUT_DIR})
-  set(build_command && sed -ie "s|CFLAG= |CFLAG=${CMAKE_CC_FLAGS} |" ${PROJECT_SOURCE_DIR}/Makefile
-                    && sed -ie "s|-isysroot $(CROSS_TOP)/SDKs/$(CROSS_SDK) ||" ${PROJECT_SOURCE_DIR}/Makefile
+  set(build_command && sed -ie "s|CFLAG= |CFLAG=${CMAKE_C_FLAGS} |" ${PROJECT_SOURCE_DIR}/Makefile
+                    && sed -ie "s|-isysroot $.CROSS_TOP./SDKs/$.CROSS_SDK. ||" ${PROJECT_SOURCE_DIR}/Makefile
                     && sed -ie "s|static volatile sig_atomic_t intr_signal|static volatile intr_signal|" ${PROJECT_SOURCE_DIR}/crypto/ui/ui_openssl.c)
 endif()
 
