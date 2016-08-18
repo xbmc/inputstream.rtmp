@@ -5,7 +5,7 @@
   name="RTMP Input"
   provider-name="spiff">
   <requires>
-    <import addon="kodi.inputstream" version="1.0.0"/>
+    <import addon="kodi.inputstream" version="1.0.5"/>
   </requires>
   <extension
     point="kodi.inputstream"
