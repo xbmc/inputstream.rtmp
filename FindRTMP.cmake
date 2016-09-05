@@ -11,7 +11,6 @@ if(PKG_CONFIG_FOUND)
 else()
   find_path(RTMP_INCLUDE_DIRS librtmp/rtmp.h)
   find_library(RTMP_LIBRARIES rtmp)
-  list(APPEND RTMP_LIBRARIES ssl crypto z)
 endif()
 
 include(FindPackageHandleStandardArgs)
