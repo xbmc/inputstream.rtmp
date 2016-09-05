@@ -7,15 +7,17 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR})
 enable_language(CXX)
 
 find_package(Kodi REQUIRED)
+find_package(OpenSSL REQUIRED)
 find_package(RTMP REQUIRED)
 
 set(RTMP_SOURCES src/RTMPStream.cpp)
 
 include_directories(${INCLUDES}
                     ${RTMP_INCLUDE_DIRS}
+                    ${OPENSSL_INCLUDE_DIR}
                     ${KODI_INCLUDE_DIR})
                     
-list(APPEND DEPLIBS ${RTMP_LIBRARIES})
+list(APPEND DEPLIBS ${RTMP_LIBRARIES} ${OPENSSL_LIBRARIES})
 					
 build_addon(inputstream.rtmp RTMP DEPLIBS)
 
