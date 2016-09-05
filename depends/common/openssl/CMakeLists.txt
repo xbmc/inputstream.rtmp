@@ -10,7 +10,7 @@ if(CORE_SYSTEM_NAME MATCHES "android")
   set(configure_command <SOURCE_DIR>/Configure shared zlib
                                                --openssldir=${OUTPUT_DIR}
                                                --with-zlib-include=${OUTPUT_DIR}/include
-                                               --with-zlib-dir=${OUTPUT_DIR}/lib
+                                               --with-zlib-lib=${OUTPUT_DIR}/lib
                                                linux-generic32)
 endif()
 
