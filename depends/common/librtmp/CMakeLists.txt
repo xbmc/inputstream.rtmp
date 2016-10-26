@@ -1,17 +1,18 @@
 project(librtmp)
 
 cmake_minimum_required(VERSION 2.8)
-set(SYS posix)
-if(CORE_SYSTEM_NAME MATCHES "osx" OR
-   CORE_SYSTEM_NAMES MATCHES "ios")
+
+if(CORE_SYSTEM_NAME STREQUAL osx OR CORE_SYSTEM_NAME STREQUAL ios)
   set(SYS darwin)
+else()
+  set(SYS posix)
 endif()
 
 include(ExternalProject)
 externalproject_add(librtmp
                     SOURCE_DIR ${CMAKE_SOURCE_DIR}
                     CONFIGURE_COMMAND ""
-                    BUILD_COMMAND cd <SOURCE_DIR> && make -C librtmp SHARED= prefix=${OUTPUT_DIR} SYS=${SYS} XCFLAGS=-fpic
+                    BUILD_COMMAND cd <SOURCE_DIR> && make -C librtmp SHARED= prefix=${OUTPUT_DIR} INC=-I${OUTPUT_DIR}/include SYS=${SYS} XCFLAGS=-fpic
                     INSTALL_COMMAND "")
 
 install(CODE "execute_process(COMMAND make -C librtmp install
