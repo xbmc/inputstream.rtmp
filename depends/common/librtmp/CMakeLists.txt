@@ -12,7 +12,7 @@ include(ExternalProject)
 externalproject_add(librtmp
                     SOURCE_DIR ${CMAKE_SOURCE_DIR}
                     CONFIGURE_COMMAND ""
-                    BUILD_COMMAND cd <SOURCE_DIR> && make -C librtmp SHARED= prefix=${OUTPUT_DIR} SYS=${SYS} XCFLAGS=-fpic
+                    BUILD_COMMAND cd <SOURCE_DIR> && make -C librtmp SHARED= prefix=${OUTPUT_DIR} INC=-I${OUTPUT_DIR}/include SYS=${SYS} XCFLAGS=-fpic
                     INSTALL_COMMAND "")
 
 install(CODE "execute_process(COMMAND make -C librtmp install

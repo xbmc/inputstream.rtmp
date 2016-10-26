@@ -40,10 +40,8 @@ externalproject_add(openssl
                     INSTALL_COMMAND ""
                     BUILD_IN_SOURCE 1)
 
-install(CODE "execute_process(COMMAND make install_sw
-                              WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-                              COMMAND rm -f ${OUTPUT_DIR}/lib/libcrypto.so*
-                              COMMAND rm -f ${OUTPUT_DIR}/lib/libssl.so*
-                              COMMAND rm -f ${OUTPUT_DIR}/lib/libcrypto*dylib*
-                              COMMAND rm -f ${OUTPUT_DIR}/lib/libssl*dylib*
-                              WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})")
+install(CODE "execute_process(COMMAND make install_sw WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+              execute_process(COMMAND rm -f ${OUTPUT_DIR}/lib/libcrypto.so* WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+              execute_process(COMMAND rm -f ${OUTPUT_DIR}/lib/libssl.so* WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+              execute_process(COMMAND rm -f ${OUTPUT_DIR}/lib/libcrypto*dylib* WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+              execute_process(COMMAND rm -f ${OUTPUT_DIR}/lib/libssl*dylib* WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})")
