@@ -1,10 +1,11 @@
 project(librtmp)
 
 cmake_minimum_required(VERSION 2.8)
-set(SYS posix)
-if(CORE_SYSTEM_NAME MATCHES "osx" OR
-   CORE_SYSTEM_NAMES MATCHES "ios")
+
+if(CORE_SYSTEM_NAME STREQUAL osx OR CORE_SYSTEM_NAME STREQUAL ios)
   set(SYS darwin)
+else()
+  set(SYS posix)
 endif()
 
 include(ExternalProject)
