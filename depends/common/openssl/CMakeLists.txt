@@ -4,28 +4,52 @@ cmake_minimum_required(VERSION 2.8)
 
 include(ExternalProject)
 
-set(configure_command MACHINE=${PLATFORM} <SOURCE_DIR>/config no-shared zlib)
-
 if(CORE_SYSTEM_NAME MATCHES "android")
-  set(configure_command <SOURCE_DIR>/Configure shared zlib
-                                               --openssldir=${OUTPUT_DIR}
-                                               --with-zlib-include=${OUTPUT_DIR}/include
-                                               --with-zlib-lib=${OUTPUT_DIR}/lib
-                                               linux-generic32)
+  set(configure_command CC=${CMAKE_C_COMPILER} AR=${CMAKE_AR}
+                        <SOURCE_DIR>/Configure no-shared zlib
+                        --openssldir=${OUTPUT_DIR}
+                        --with-zlib-include=${OUTPUT_DIR}/include
+                        --with-zlib-lib=${OUTPUT_DIR}/lib
+                        android ${CMAKE_C_FLAGS} -I${OUTPUT_DIR}/include
+      && sed -ie "s|apps test||" ${PROJECT_SOURCE_DIR}/Makefile)
+endif()
+
+if(CORE_SYSTEM_NAME MATCHES "linux")
+  if(CMAKE_TOOLCHAIN_FILE)
+    if(CPU MATCHES aarch64 OR CPU MATCHES arm64 OR CPU STREQUAL x86_64 OR ARCH MATCHES aarch64 OR ARCH STREQUAL x86_64)
+      set(bitness 64)
+    elseif(CPU MATCHES arm OR CPU MATCHES "i.86" OR ARCH MATCHES arm)
+      set(bitness 32)
+    endif()
+
+    set(configure_command CC=${CMAKE_C_COMPILER} AR=${CMAKE_AR}
+                          <SOURCE_DIR>/Configure no-shared zlib
+                          --openssldir=${OUTPUT_DIR}
+                          --with-zlib-include=${OUTPUT_DIR}/include
+                          --with-zlib-lib=${OUTPUT_DIR}/lib
+                          linux-generic${bitness} ${CMAKE_C_FLAGS} -I${OUTPUT_DIR}/include
+        && sed -ie "s|apps test||" ${PROJECT_SOURCE_DIR}/Makefile)
+  else()
+    set(configure_command MACHINE=${PLATFORM} CC=${CMAKE_C_COMPILER} AR=${CMAKE_AR} <SOURCE_DIR>/config no-shared zlib
+        && sed -ie "s|apps test||" ${PROJECT_SOURCE_DIR}/Makefile)
+  endif()
 endif()
 
 if(CORE_SYSTEM_NAME MATCHES "ios")
-  set(configure_command CC=${CMAKE_COMPILER} AR=${CMAKE_AR} <SOURCE_DIR>/Configure iphoneos-cross zlib no-asm no-krb5 --openssldir=${OUTPUT_DIR})
-  set(build_command && sed -ie "s|CFLAG= |CFLAG=${CMAKE_C_FLAGS} |" ${PROJECT_SOURCE_DIR}/Makefile
-                    && sed -ie "s|-isysroot $.CROSS_TOP./SDKs/$.CROSS_SDK. ||" ${PROJECT_SOURCE_DIR}/Makefile
-                    && sed -ie "s|static volatile sig_atomic_t intr_signal|static volatile intr_signal|" ${PROJECT_SOURCE_DIR}/crypto/ui/ui_openssl.c)
+  set(configure_command CC=${CMAKE_COMPILER} AR=${CMAKE_AR} <SOURCE_DIR>/Configure iphoneos-cross zlib no-asm no-krb5 --openssldir=${OUTPUT_DIR}
+      && sed -ie "s|CFLAG= |CFLAG=${CMAKE_C_FLAGS} |" ${PROJECT_SOURCE_DIR}/Makefile
+      && sed -ie "s|-isysroot $.CROSS_TOP./SDKs/$.CROSS_SDK. ||" ${PROJECT_SOURCE_DIR}/Makefile
+      && sed -ie "s|apps test||" ${PROJECT_SOURCE_DIR}/Makefile
+      && sed -ie "s|static volatile sig_atomic_t intr_signal|static volatile intr_signal|" ${PROJECT_SOURCE_DIR}/crypto/ui/ui_openssl.c)
 endif()
 
 if(CORE_SYSTEM_NAME MATCHES "osx")
   if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-    set(configure_command <SOURCE_DIR>/Configure darwin64-x86_64-cc zlib no-asm no-krb5 shared --openssldir=${OUTPUT_DIR})
+    set(configure_command <SOURCE_DIR>/Configure darwin64-x86_64-cc zlib no-asm no-krb5 shared --openssldir=${OUTPUT_DIR}
+        && sed -ie "s|apps test||" ${PROJECT_SOURCE_DIR}/Makefile)
   else()
-    set(configure_command <SOURCE_DIR>/Configure darwin-x86-cc zlib no-asm no-krb5 shared --openssldir=${OUTPUT_DIR})
+    set(configure_command <SOURCE_DIR>/Configure darwin-x86-cc zlib no-asm no-krb5 shared --openssldir=${OUTPUT_DIR}
+        && sed -ie "s|apps test||" ${PROJECT_SOURCE_DIR}/Makefile)
   endif()
 endif()
 
@@ -33,10 +57,6 @@ externalproject_add(openssl
                     SOURCE_DIR ${CMAKE_SOURCE_DIR}
                     UPDATE_COMMAND ""
                     CONFIGURE_COMMAND ${configure_command}
-                    BUILD_COMMAND echo Building openssl ${build_command}
-                    COMMAND sed -ie "s|apps test||" ${PROJECT_SOURCE_DIR}/Makefile
-                    COMMAND make depend
-                    COMMAND make
                     INSTALL_COMMAND ""
                     BUILD_IN_SOURCE 1)
 

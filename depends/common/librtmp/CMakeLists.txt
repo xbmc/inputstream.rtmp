@@ -8,11 +8,15 @@ else()
   set(SYS posix)
 endif()
 
+set(cflags ${CMAKE_C_FLAGS} -I${OUTPUT_DIR}/include)
+
 include(ExternalProject)
 externalproject_add(librtmp
                     SOURCE_DIR ${CMAKE_SOURCE_DIR}
                     CONFIGURE_COMMAND ""
-                    BUILD_COMMAND cd <SOURCE_DIR> && make -C librtmp SHARED= prefix=${OUTPUT_DIR} INC=-I${OUTPUT_DIR}/include SYS=${SYS} XCFLAGS=-fpic
+                    BUILD_COMMAND cd <SOURCE_DIR>
+                                  && make -C librtmp SHARED= prefix=${OUTPUT_DIR} INC=-I${OUTPUT_DIR}/include SYS=${SYS}
+                                     XCFLAGS=${cflags} CC=${CMAKE_C_COMPILER} AR=${CMAKE_AR} XLDFLAGS=${OUTPUT_DIR}/lib
                     INSTALL_COMMAND "")
 
 install(CODE "execute_process(COMMAND make -C librtmp install
