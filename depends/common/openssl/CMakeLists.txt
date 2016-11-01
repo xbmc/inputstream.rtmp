@@ -5,8 +5,9 @@ cmake_minimum_required(VERSION 2.8)
 include(ExternalProject)
 
 if(CORE_SYSTEM_NAME MATCHES "android")
-  set(configure_command CC=${CMAKE_C_COMPILER} AR=${CMAKE_AR}
+  set(configure_command CC=${CMAKE_C_COMPILER} AR=${CMAKE_AR} INSTALL_PREFIX=""
                         <SOURCE_DIR>/Configure no-shared zlib
+                        --install_prefix=""
                         --openssldir=${OUTPUT_DIR}
                         --with-zlib-include=${OUTPUT_DIR}/include
                         --with-zlib-lib=${OUTPUT_DIR}/lib
@@ -22,8 +23,9 @@ if(CORE_SYSTEM_NAME MATCHES "linux")
       set(bitness 32)
     endif()
 
-    set(configure_command CC=${CMAKE_C_COMPILER} AR=${CMAKE_AR}
+    set(configure_command CC=${CMAKE_C_COMPILER} AR=${CMAKE_AR} INSTALL_PREFIX=""
                           <SOURCE_DIR>/Configure no-shared zlib
+                          --install_prefix=""
                           --openssldir=${OUTPUT_DIR}
                           --with-zlib-include=${OUTPUT_DIR}/include
                           --with-zlib-lib=${OUTPUT_DIR}/lib
@@ -36,7 +38,10 @@ if(CORE_SYSTEM_NAME MATCHES "linux")
 endif()
 
 if(CORE_SYSTEM_NAME MATCHES "ios")
-  set(configure_command CC=${CMAKE_COMPILER} AR=${CMAKE_AR} <SOURCE_DIR>/Configure iphoneos-cross zlib no-asm no-krb5 --openssldir=${OUTPUT_DIR}
+  set(configure_command CC=${CMAKE_COMPILER} AR=${CMAKE_AR} INSTALL_PREFIX=""
+                        <SOURCE_DIR>/Configure iphoneos-cross zlib no-asm no-krb5
+                        --openssldir=${OUTPUT_DIR}
+                        --install_prefix=""
       && sed -ie "s|CFLAG= |CFLAG=${CMAKE_C_FLAGS} |" ${PROJECT_SOURCE_DIR}/Makefile
       && sed -ie "s|-isysroot $.CROSS_TOP./SDKs/$.CROSS_SDK. ||" ${PROJECT_SOURCE_DIR}/Makefile
       && sed -ie "s|apps test||" ${PROJECT_SOURCE_DIR}/Makefile
@@ -60,7 +65,8 @@ externalproject_add(openssl
                     INSTALL_COMMAND ""
                     BUILD_IN_SOURCE 1)
 
-install(CODE "execute_process(COMMAND make install_sw WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+install(CODE "execute_process(COMMAND find ${CMAKE_SOURCE_DIR} -name Makefile -exec sed -ie s|INSTALL_PREFIX|stupidshit|g {} \;)
+              execute_process(COMMAND make install_sw WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
               execute_process(COMMAND rm -f ${OUTPUT_DIR}/lib/libcrypto.so* WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
               execute_process(COMMAND rm -f ${OUTPUT_DIR}/lib/libssl.so* WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
               execute_process(COMMAND rm -f ${OUTPUT_DIR}/lib/libcrypto*dylib* WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
