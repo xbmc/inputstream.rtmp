@@ -150,7 +150,8 @@ std::map<std::string, AVal> options =
 
   void Close(void)
   {
-    RTMP_Close(session);
+    if (session)
+      RTMP_Close(session);
     session = nullptr;
     paused = false;
   }
