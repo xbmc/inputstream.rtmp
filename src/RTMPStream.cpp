@@ -242,7 +242,7 @@ std::map<std::string, AVal> options =
   {
   }
 
-  bool DemuxSeekTime(int time, bool backwards, double *startpts)
+  bool DemuxSeekTime(double time, bool backwards, double *startpts)
   {
     return false;
   }
