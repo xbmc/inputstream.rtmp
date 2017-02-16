@@ -1,0 +1,1 @@
+openssl http://mirrors.kodi.tv/build-deps/win32/openssl-1.0.2g-win32-vc140-v2.7z
