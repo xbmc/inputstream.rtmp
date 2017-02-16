@@ -10,7 +10,7 @@ if(PKG_CONFIG_FOUND)
 endif()
 
 find_path(RTMP_INCLUDE_DIR librtmp/rtmp.h PATHS ${PC_RTMP_INCLUDEDIR})
-find_library(RTMP_LIBRARY rtmp PATHS ${PC_RTMP_LIBDIR})
+find_library(RTMP_LIBRARY rtmp librtmp PATHS ${PC_RTMP_LIBDIR})
 
 if(PC_RTMP_FOUND)
   if(RTMP_LIBRARY)
