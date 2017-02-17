@@ -21,7 +21,11 @@ include_directories(${INCLUDES}
                     ${KODI_INCLUDE_DIR})
                     
 list(APPEND DEPLIBS ${RTMP_LIBRARIES} ${OPENSSL_LIBRARIES} ${ZLIB_LIBRARIES})
-					
+
+if(CORE_SYSTEM_NAME MATCHES "windows")
+	list(APPEND DEPLIBS Winmm.lib WS2_32.lib)
+endif()
+
 build_addon(inputstream.rtmp RTMP DEPLIBS)
 
 include(CPack)
