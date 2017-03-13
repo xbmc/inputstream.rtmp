@@ -142,6 +142,7 @@ std::map<std::string, AVal> options =
     if (!RTMP_Connect(session, nullptr) || !RTMP_ConnectStream(session, 0))
     {
       RTMP_Close(session);
+      session = nullptr;
       return false;
     }
 
