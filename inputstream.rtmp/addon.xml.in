@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="inputstream.rtmp"
-  version="1.0.5"
+  version="1.0.6"
   name="RTMP Input"
   provider-name="spiff">
-  <requires>
-    <import addon="kodi.inputstream" version="1.0.6"/>
-  </requires>
+  <requires>@ADDON_DEPENDS@</requires>
   <extension
     point="kodi.inputstream"
     name="rtmp"
