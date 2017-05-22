@@ -79,10 +79,6 @@ extern "C" {
     return ADDON_STATUS_OK;
   }
 
-  void ADDON_Stop()
-  {
-  }
-
   /***********************************************************
   * InputSteam Client AddOn specific public library functions
   ***********************************************************/
