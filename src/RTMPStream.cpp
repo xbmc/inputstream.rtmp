@@ -22,70 +22,11 @@
 #include <librtmp/log.h>
 #include <librtmp/rtmp.h>
 
-#include "xbmc_addon_types.h"
-#include "libXBMC_addon.h"
-#include "kodi_inputstream_types.h"
+#include <kodi/addon-instance/Inputstream.h>
 
-ADDON::CHelper_libXBMC_addon *xbmc = nullptr;
-
-/***************************  Interface *********************************/
-
-#include "kodi_inputstream_dll.h"
-#include "libKODI_inputstream.h"
-
-extern "C" {
-  
-  ADDON_STATUS curAddonStatus = ADDON_STATUS_UNKNOWN;
-  RTMP* session = nullptr;
-  bool paused = false;
-
-  /***********************************************************
-  * Standart AddOn related public library functions
-  ***********************************************************/
-
-  ADDON_STATUS ADDON_Create(void* hdl, void* props)
-  {
-    if (!hdl)
-      return ADDON_STATUS_UNKNOWN;
-
-    xbmc = new ADDON::CHelper_libXBMC_addon;
-    if (!xbmc->RegisterMe(hdl))
-    {
-      delete xbmc, xbmc = nullptr;
-      return ADDON_STATUS_PERMANENT_FAILURE;
-    }
-
-    xbmc->Log(ADDON::LOG_DEBUG, "InputStream.rtmp: ADDON_Create()");
-
-    curAddonStatus = ADDON_STATUS_OK;
-    return curAddonStatus;
-  }
-
-  ADDON_STATUS ADDON_GetStatus()
-  {
-    return curAddonStatus;
-  }
-
-  void ADDON_Destroy()
-  {
-    if (xbmc)
-      xbmc->Log(ADDON::LOG_DEBUG, "InputStream.rtmp: ADDON_Destroy()");
-
-    delete xbmc, xbmc = nullptr;
-  }
-
-  ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
-  {
-    return ADDON_STATUS_OK;
-  }
-
-  void ADDON_Stop()
-  {
-  }
-
-  /***********************************************************
-  * InputSteam Client AddOn specific public library functions
-  ***********************************************************/
+/***********************************************************
+* InputSteam Client AddOn specific public library functions
+***********************************************************/
 
 #define  SetAVal(av, cstr)  av.av_val = (char *)cstr; av.av_len = strlen(cstr)
 #undef AVC
@@ -99,166 +40,112 @@ std::map<std::string, AVal> options =
   { "TcUrl",     AVC("tcUrl")   },
   { "IsLive",    AVC("live")    }};
 
-  bool Open(INPUTSTREAM& props)
+class CInputStreamRTMP
+  : public kodi::addon::CInstanceInputStream
+{
+public:
+  CInputStreamRTMP(KODI_HANDLE instance);
+
+  virtual bool Open(INPUTSTREAM& props) override;
+  virtual void Close() override;
+  virtual void GetCapabilities(INPUTSTREAM_CAPABILITIES& caps) override;
+  virtual int ReadStream(uint8_t* buffer, unsigned int bufferSize) override;
+  virtual void PauseStream(double time) override;
+  virtual bool PosTime(int ms) override;
+  virtual int GetTotalTime() override { return 20; }
+  virtual int GetTime() override { return 0; }
+  virtual bool CanPauseStream() override { return true; }
+  virtual bool CanSeekStream() override { return true; }
+
+private:
+  RTMP* m_session;
+  bool m_paused;
+};
+
+CInputStreamRTMP::CInputStreamRTMP(KODI_HANDLE instance)
+  : CInstanceInputStream(instance),
+    m_session(nullptr),
+    m_paused(false)
+{
+}
+
+bool CInputStreamRTMP::Open(INPUTSTREAM& props)
+{
+  kodi::Log(ADDON_LOG_DEBUG, "InputStream.rtmp: OpenStream()");
+
+  m_session = RTMP_Alloc();
+  RTMP_Init(m_session);
+
+  RTMP_SetupURL(m_session, (char*)props.m_strURL);
+
+  for (auto& it : options)
   {
-    xbmc->Log(ADDON::LOG_DEBUG, "InputStream.rtmp: OpenStream()");
-
-    session = RTMP_Alloc();
-    RTMP_Init(session);
-
-    RTMP_SetupURL(session, (char*)props.m_strURL);
-
-    for (auto& it : options)
+    for (size_t i = 0; i < props.m_nCountInfoValues; ++i)
     {
-      for (size_t i = 0; i < props.m_nCountInfoValues; ++i)
+      if (it.first == props.m_ListItemProperties[i].m_strKey)
       {
-        if (it.first == props.m_ListItemProperties[i].m_strKey)
-        {
-          AVal av_tmp;
-          SetAVal(av_tmp, props.m_ListItemProperties[i].m_strValue);
-          RTMP_SetOpt(session, &it.second, &av_tmp);
-        }
+        AVal av_tmp;
+        SetAVal(av_tmp, props.m_ListItemProperties[i].m_strValue);
+        RTMP_SetOpt(m_session, &it.second, &av_tmp);
       }
     }
+  }
 
-    if (!RTMP_Connect(session, nullptr) || !RTMP_ConnectStream(session, 0))
+  if (!RTMP_Connect(m_session, nullptr) || !RTMP_ConnectStream(m_session, 0))
+  {
+    RTMP_Close(m_session);
+    m_session = nullptr;
+    return false;
+  }
+
+  return true;
+}
+
+void CInputStreamRTMP::Close()
+{
+  if (m_session)
+    RTMP_Close(m_session);
+  m_session = nullptr;
+  m_paused = false;
+}
+
+void CInputStreamRTMP::GetCapabilities(INPUTSTREAM_CAPABILITIES &caps)
+{
+  caps.m_mask |= INPUTSTREAM_CAPABILITIES::SUPPORTS_IPOSTIME;
+}
+
+int CInputStreamRTMP::ReadStream(uint8_t* buf, unsigned int size)
+{
+  return RTMP_Read(m_session, (char*)buf, size);
+}
+
+void CInputStreamRTMP::PauseStream(double time)
+{
+  m_paused = !m_paused;
+  RTMP_Pause(m_session, m_paused);
+}
+
+bool CInputStreamRTMP::PosTime(int ms)
+{
+  return RTMP_SendSeek(m_session, ms);
+}
+
+/*****************************************************************************************************/
+
+class CMyAddon
+  : public kodi::addon::CAddonBase
+{
+public:
+  CMyAddon() { }
+  virtual ADDON_STATUS CreateInstance(int instanceType, std::string instanceID, KODI_HANDLE instance, KODI_HANDLE& addonInstance) override
+  {
+    if (instanceType == ADDON_INSTANCE_INPUTSTREAM)
     {
-      RTMP_Close(session);
-      session = nullptr;
-      return false;
+      addonInstance = new CInputStreamRTMP(instance);
+      return ADDON_STATUS_OK;
     }
-
-    return true;
+    return ADDON_STATUS_NOT_IMPLEMENTED;
   }
+};
 
-  void Close(void)
-  {
-    if (session)
-      RTMP_Close(session);
-    session = nullptr;
-    paused = false;
-  }
-
-  struct INPUTSTREAM_CAPABILITIES GetCapabilities()
-  {
-    INPUTSTREAM_CAPABILITIES caps;
-    caps.m_supportsIDemux = false;
-    caps.m_supportsIPosTime = true;
-    caps.m_supportsIDisplayTime = false;
-    return caps;
-  }
-
-  int ReadStream(unsigned char* buf, unsigned int size)
-  {
-    return RTMP_Read(session, (char*)buf, size);
-  }
-
-  int64_t SeekStream(int64_t offset, int whence)
-  {
-    return -1;
-  }
-
-  int64_t PositionStream(void)
-  {
-    return -1;
-  }
-
-  int64_t LengthStream(void)
-  {
-    return -1;
-  }
-
-  int GetTotalTime()
-  {
-    return 20;
-  }
-
-  int GetTime()
-  {
-    return 0;
-  }
-
-  bool CanPauseStream(void)
-  {
-    return true;
-  }
-
-  void PauseStream(double dTime)
-  {
-    paused = !paused;
-    RTMP_Pause(session, paused);
-  }
-
-  bool CanSeekStream(void)
-  {
-    return true;
-  }
-
-  bool PosTime(int ms)
-  {
-    return RTMP_SendSeek(session, ms);
-  }
-
-  void SetSpeed(int)
-  {
-  }
-
-  bool IsRealTimeStream(void)
-  {
-    return false;
-  }
-
-  void EnableStream(int streamid, bool enable)
-  {
-  }
-
-  void EnableStreamAtPTS(int streamid, uint64_t pts)
-  {
-  }
-
-  INPUTSTREAM_IDS GetStreamIds()
-  {
-    return INPUTSTREAM_IDS();
-  }
-
-  void DemuxSetSpeed(int speed)
-  {
-  }
-
-  bool DemuxSeekTime(double time, bool backwards, double *startpts)
-  {
-    return false;
-  }
-
-  DemuxPacket* DemuxRead(void)
-  {
-    return nullptr;
-  }
-
-  void DemuxFlush(void)
-  {
-  }
-
-  void DemuxAbort(void)
-  {
-  }
-
-  void DemuxReset(void)
-  {
-  }
-
-  const char* GetPathList(void)
-  {
-    return "wtf";
-  }
-
-  void SetVideoResolution(int width, int height)
-  {
-  }
-
-  struct INPUTSTREAM_INFO GetStream(int streamid)
-  {
-    return INPUTSTREAM_INFO(); 
-  }
-
-}//extern "C"
+ADDONCREATOR(CMyAddon)

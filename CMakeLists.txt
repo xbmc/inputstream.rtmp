@@ -21,7 +21,7 @@ include_directories(${INCLUDES}
                     ${RTMP_INCLUDE_DIRS}
                     ${OPENSSL_INCLUDE_DIR}
                     ${ZLIB_INCLUDE_DIRS}
-                    ${KODI_INCLUDE_DIR})
+                    ${KODI_INCLUDE_DIR}/..) # Hack way with "/..", need bigger Kodi cmake rework to match right include ways (becomes done in future)
                     
 list(APPEND DEPLIBS ${RTMP_LIBRARIES} ${OPENSSL_LIBRARIES} ${ZLIB_LIBRARIES})
 
