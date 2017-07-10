@@ -49,6 +49,9 @@ public:
   virtual bool Open(INPUTSTREAM& props) override;
   virtual void Close() override;
   virtual void GetCapabilities(INPUTSTREAM_CAPABILITIES& caps) override;
+  virtual INPUTSTREAM_IDS GetStreamIds() override;
+  virtual INPUTSTREAM_INFO GetStream(int streamid) override;
+  virtual void EnableStream(int streamid, bool enable) override;
   virtual int ReadStream(uint8_t* buffer, unsigned int bufferSize) override;
   virtual void PauseStream(double time) override;
   virtual bool PosTime(int ms) override;
@@ -112,6 +115,20 @@ void CInputStreamRTMP::Close()
 void CInputStreamRTMP::GetCapabilities(INPUTSTREAM_CAPABILITIES &caps)
 {
   caps.m_mask |= INPUTSTREAM_CAPABILITIES::SUPPORTS_IPOSTIME;
+}
+
+INPUTSTREAM_IDS CInputStreamRTMP::GetStreamIds()
+{
+  return INPUTSTREAM_IDS();
+}
+
+INPUTSTREAM_INFO CInputStreamRTMP::GetStream(int streamid)
+{
+  return INPUTSTREAM_INFO();
+}
+
+void CInputStreamRTMP::EnableStream(int streamid, bool enable)
+{
 }
 
 int CInputStreamRTMP::ReadStream(uint8_t* buf, unsigned int size)
