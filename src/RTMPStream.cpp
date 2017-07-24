@@ -52,6 +52,7 @@ public:
   virtual INPUTSTREAM_IDS GetStreamIds() override;
   virtual INPUTSTREAM_INFO GetStream(int streamid) override;
   virtual void EnableStream(int streamid, bool enable) override;
+  virtual void OpenStream(int streamid) override;
   virtual int ReadStream(uint8_t* buffer, unsigned int bufferSize) override;
   virtual void PauseStream(double time) override;
   virtual bool PosTime(int ms) override;
@@ -80,7 +81,6 @@ bool CInputStreamRTMP::Open(INPUTSTREAM& props)
   RTMP_Init(m_session);
 
   RTMP_SetupURL(m_session, (char*)props.m_strURL);
-
   for (auto& it : options)
   {
     for (size_t i = 0; i < props.m_nCountInfoValues; ++i)
@@ -102,6 +102,10 @@ bool CInputStreamRTMP::Open(INPUTSTREAM& props)
   }
 
   return true;
+}
+
+void CInputStreamRTMP::OpenStream(int streamid)
+{
 }
 
 void CInputStreamRTMP::Close()
