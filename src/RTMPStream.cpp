@@ -111,7 +111,10 @@ void CInputStreamRTMP::OpenStream(int streamid)
 void CInputStreamRTMP::Close()
 {
   if (m_session)
+  {
     RTMP_Close(m_session);
+    RTMP_Free(m_session);
+  }
   m_session = nullptr;
   m_paused = false;
 }
