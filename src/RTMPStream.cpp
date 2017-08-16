@@ -52,7 +52,7 @@ public:
   virtual INPUTSTREAM_IDS GetStreamIds() override;
   virtual INPUTSTREAM_INFO GetStream(int streamid) override;
   virtual void EnableStream(int streamid, bool enable) override;
-  virtual void OpenStream(int streamid) override;
+  virtual bool OpenStream(int streamid) override;
   virtual int ReadStream(uint8_t* buffer, unsigned int bufferSize) override;
   virtual void PauseStream(double time) override;
   virtual bool PosTime(int ms) override;
@@ -104,8 +104,9 @@ bool CInputStreamRTMP::Open(INPUTSTREAM& props)
   return true;
 }
 
-void CInputStreamRTMP::OpenStream(int streamid)
+bool CInputStreamRTMP::OpenStream(int streamid)
 {
+  return false;
 }
 
 void CInputStreamRTMP::Close()
