@@ -31,4 +31,11 @@ endif()
 
 build_addon(inputstream.rtmp RTMP DEPLIBS)
 
+if(CORE_SYSTEM_NAME STREQUAL windowsstore)
+    # fix linking
+    set_target_properties(inputstream.rtmp PROPERTIES LINK_FLAGS_RELWITHDEBINFO "/LTCG /defaultlib:vccorlib.lib /defaultlib:msvcrt.lib")
+    set_target_properties(inputstream.rtmp PROPERTIES LINK_FLAGS_RELEASE "/LTCG /defaultlib:vccorlib.lib /defaultlib:msvcrt.lib")
+    set_target_properties(inputstream.rtmp PROPERTIES LINK_FLAGS_DEBUG "/LTCG /defaultlib:vccorlibd.lib /defaultlib:msvcrtd.lib")
+endif()
+
 include(CPack)

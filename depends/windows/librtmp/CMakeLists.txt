@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(librtmp C)
+project(librtmp C CXX)
 
 add_definitions(
 	-DUSE_OPENSSL
@@ -32,6 +32,12 @@ add_library(librtmp
 	librtmp/rtmp.c
 	librtmp/rtmp_sys.h
 )
+if(MSVC AND CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+  target_sources(librtmp PRIVATE
+    librtmp/uwpapi.cpp
+  )
+  set_source_files_properties(librtmp/uwpapi.cpp PROPERTIES COMPILE_FLAGS "/TP /ZW")
+endif()
 
 target_link_libraries(librtmp ${OPENSSL_LIBRARIES} ${ZLIB_LIBRARIES} Ws2_32 winmm gdi32)
 
