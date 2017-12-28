@@ -1,4 +1,4 @@
-project(inputstream.mpd)
+project(inputstream.rtmp)
 
 cmake_minimum_required(VERSION 2.6)
 
