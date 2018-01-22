@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 2.8)
 include(ExternalProject)
 
 if(CORE_SYSTEM_NAME MATCHES "android")
-  set(configure_command CC=${CMAKE_C_COMPILER} AR=${CMAKE_AR} INSTALL_PREFIX=""
+  set(configure_command CC=${CMAKE_C_COMPILER} AR=${CMAKE_AR} RANLIB=${CMAKE_RANLIB} INSTALL_PREFIX=""
                         <SOURCE_DIR>/Configure no-shared zlib
                         --install_prefix=""
                         --openssldir=${OUTPUT_DIR}
