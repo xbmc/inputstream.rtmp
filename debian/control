@@ -1,8 +1,9 @@
 Source: kodi-inputstream-rtmp
 Priority: extra
-Maintainer: Arne Morten Kvarving <spiff@xbmc.org>
+Maintainer: Arne Morten Kvarving <spiff@kodi.tv>
 Build-Depends: debhelper (>= 9.0.0), cmake, libkodiplatform-dev (>= 17.0.0),
-               kodi-addon-dev, kodi-inputstream-dev, pkg-config, libssl-dev, zlib1g-dev, librtmp-dev
+               kodi-addon-dev, kodi-inputstream-dev, pkg-config, libssl-dev,
+               zlib1g-dev, librtmp-dev, libgnutls-dev
 Standards-Version: 3.9.6
 Section: libs
 
