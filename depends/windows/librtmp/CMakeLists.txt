@@ -4,7 +4,9 @@ project(librtmp C CXX)
 
 add_definitions(
 	-DUSE_OPENSSL
+	-D_CRT_NONSTDC_NO_DEPRECATE
 	-D_CRT_SECURE_NO_WARNINGS
+	-D_WINSOCK_DEPRECATED_NO_WARNINGS
 )
 
 find_package(OpenSSL REQUIRED)
