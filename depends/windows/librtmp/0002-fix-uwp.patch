@@ -1,8 +1,6 @@
-diff --git a/librtmp/hashswf.c b/librtmp/hashswf.c
-index 9f4e2c0..e15dfb5 100644
 --- a/librtmp/hashswf.c
 +++ b/librtmp/hashswf.c
-@@ -470,6 +470,13 @@ RTMP_HashSWF(const char *url, unsigned int *size, unsigned char *hash,
+@@ -470,6 +470,13 @@
    hpre.av_val = "Q:";
    hpre.av_len = 2;
    home.av_val = "\\UserData";
@@ -16,11 +14,9 @@ index 9f4e2c0..e15dfb5 100644
  #else
    hpre.av_val = getenv("HOMEDRIVE");
    hpre.av_len = strlen(hpre.av_val);
-diff --git a/librtmp/rtmp.c b/librtmp/rtmp.c
-index a2863b0..5c455f8 100644
 --- a/librtmp/rtmp.c
 +++ b/librtmp/rtmp.c
-@@ -158,7 +158,7 @@ RTMP_GetTime()
+@@ -158,7 +158,7 @@
  #ifdef _DEBUG
    return 0;
  #elif defined(_WIN32)
@@ -29,9 +25,6 @@ index a2863b0..5c455f8 100644
  #else
    struct tms t;
    if (!clk_tck) clk_tck = sysconf(_SC_CLK_TCK);
-diff --git a/librtmp/uwpapi.cpp b/librtmp/uwpapi.cpp
-new file mode 100644
-index 0000000..c01a449
 --- /dev/null
 +++ b/librtmp/uwpapi.cpp
 @@ -0,0 +1,31 @@
@@ -66,6 +59,3 @@ index 0000000..c01a449
 +}
 +
 +#endif
--- 
-2.10.2.windows.1
-
