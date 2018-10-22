@@ -1,8 +1,8 @@
---- librtmp/Makefile.old	2016-06-20 12:40:21.179754807 +0200
-+++ librtmp/Makefile	2016-06-20 12:40:54.233259590 +0200
+--- a/Makefile
++++ b/Makefile
 @@ -2,8 +2,8 @@
  
- prefix=/usr/local
+ prefix=$(PREFIX)
  
 -CC=$(CROSS_COMPILE)gcc
 -LD=$(CROSS_COMPILE)ld
