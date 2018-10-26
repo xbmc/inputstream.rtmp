@@ -5,12 +5,19 @@ cmake_minimum_required(VERSION 2.8)
 include(ExternalProject)
 
 if(CORE_SYSTEM_NAME MATCHES "android")
-  set(configure_command CC=${CMAKE_C_COMPILER} AR=${CMAKE_AR} RANLIB=${CMAKE_RANLIB} INSTALL_PREFIX=""
+  if(CPU MATCHES arm64)
+    set(OPENSSL_TARGET android-arm64)
+  elseif(CPU MATCHES arm)
+    set(OPENSSL_TARGET android-arm)
+  elseif(CPU MATCHES i686)
+    set(OPENSSL_TARGET android-x86)
+  endif()
+  set(configure_command CC=${CMAKE_C_COMPILER} AR=${CMAKE_AR} RANLIB=${CMAKE_RANLIB} INSTALL_PREFIX="" ANDROID_NDK=${TOOLCHAIN}
                         <SOURCE_DIR>/Configure no-shared zlib
                         --prefix=${OUTPUT_DIR}
                         --with-zlib-include=${OUTPUT_DIR}/include
                         --with-zlib-lib=${OUTPUT_DIR}/lib
-                        android ${CMAKE_C_FLAGS} -I${OUTPUT_DIR}/include
+                        ${OPENSSL_TARGET} ${CMAKE_C_FLAGS} -I${OUTPUT_DIR}/include
       && sed -ie "s|apps test||" ${PROJECT_SOURCE_DIR}/Makefile)
 endif()
 
