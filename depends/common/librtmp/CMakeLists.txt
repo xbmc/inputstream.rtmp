@@ -2,7 +2,7 @@ project(librtmp)
 
 cmake_minimum_required(VERSION 2.8)
 
-if(CORE_SYSTEM_NAME STREQUAL osx OR CORE_SYSTEM_NAME STREQUAL ios)
+if(CORE_SYSTEM_NAME STREQUAL osx OR CORE_SYSTEM_NAME STREQUAL ios OR CORE_SYSTEM_NAME STREQUAL darwin_embedded)
   set(SYS darwin)
 else()
   set(SYS posix)
