@@ -9,8 +9,6 @@ find_package(OpenSSL REQUIRED)
 find_package(ZLIB REQUIRED)
 find_package(RTMP REQUIRED)
 
-list(APPEND DEPLIBS ${p8-platform_LIBRARIES})
-
 set(RTMP_SOURCES src/RTMPStream.cpp)
 
 include_directories(${INCLUDES}
