@@ -125,12 +125,14 @@ void CInputStreamRTMP::GetCapabilities(INPUTSTREAM_CAPABILITIES &caps)
 
 INPUTSTREAM_IDS CInputStreamRTMP::GetStreamIds()
 {
-  return INPUTSTREAM_IDS();
+  INPUTSTREAM_IDS ids = { 0 };
+  return ids;
 }
 
 INPUTSTREAM_INFO CInputStreamRTMP::GetStream(int streamid)
 {
-  return INPUTSTREAM_INFO();
+  INPUTSTREAM_INFO info = { INPUTSTREAM_INFO::STREAM_TYPE::TYPE_NONE };
+  return info;
 }
 
 void CInputStreamRTMP::EnableStream(int streamid, bool enable)
