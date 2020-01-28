@@ -62,14 +62,12 @@ public:
   virtual bool CanSeekStream() override { return true; }
 
 private:
-  RTMP* m_session;
-  bool m_paused;
+  RTMP* m_session = nullptr;
+  bool m_paused = false;
 };
 
 CInputStreamRTMP::CInputStreamRTMP(KODI_HANDLE instance)
-  : CInstanceInputStream(instance),
-    m_session(nullptr),
-    m_paused(false)
+  : CInstanceInputStream(instance)
 {
 }
 
