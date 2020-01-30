@@ -33,12 +33,15 @@
 #define AVC(str)  {(char *)str,sizeof(str)-1}
 
 /* librtmp option names are slightly different */
+namespace
+{
 std::map<std::string, AVal> options =
  {{ "SWFPlayer", AVC("swfUrl")  },
   { "PageURL",   AVC("pageUrl") },
   { "PlayPath",  AVC("playpath")},
   { "TcUrl",     AVC("tcUrl")   },
   { "IsLive",    AVC("live")    }};
+}
 
 class CInputStreamRTMP
   : public kodi::addon::CInstanceInputStream
