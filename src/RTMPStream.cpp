@@ -46,20 +46,20 @@ class CInputStreamRTMP
 public:
   CInputStreamRTMP(KODI_HANDLE instance);
 
-  virtual bool Open(INPUTSTREAM& props) override;
-  virtual void Close() override;
-  virtual void GetCapabilities(INPUTSTREAM_CAPABILITIES& caps) override;
-  virtual INPUTSTREAM_IDS GetStreamIds() override;
-  virtual INPUTSTREAM_INFO GetStream(int streamid) override;
-  virtual void EnableStream(int streamid, bool enable) override;
-  virtual bool OpenStream(int streamid) override;
-  virtual int ReadStream(uint8_t* buffer, unsigned int bufferSize) override;
-  virtual void PauseStream(double time) override;
-  virtual bool PosTime(int ms) override;
-  virtual int GetTotalTime() override { return 20; }
-  virtual int GetTime() override { return 0; }
-  virtual bool CanPauseStream() override { return true; }
-  virtual bool CanSeekStream() override { return true; }
+  bool Open(INPUTSTREAM& props) override;
+  void Close() override;
+  void GetCapabilities(INPUTSTREAM_CAPABILITIES& caps) override;
+  INPUTSTREAM_IDS GetStreamIds() override;
+  INPUTSTREAM_INFO GetStream(int streamid) override;
+  void EnableStream(int streamid, bool enable) override;
+  bool OpenStream(int streamid) override;
+  int ReadStream(uint8_t* buffer, unsigned int bufferSize) override;
+  void PauseStream(double time) override;
+  bool PosTime(int ms) override;
+  int GetTotalTime() override { return 20; }
+  int GetTime() override { return 0; }
+  bool CanPauseStream() override { return true; }
+  bool CanSeekStream() override { return true; }
 
 private:
   RTMP* m_session = nullptr;
@@ -161,8 +161,8 @@ class CMyAddon
   : public kodi::addon::CAddonBase
 {
 public:
-  CMyAddon() { }
-  virtual ADDON_STATUS CreateInstance(int instanceType, std::string instanceID, KODI_HANDLE instance, KODI_HANDLE& addonInstance) override
+  CMyAddon() = default;
+  ADDON_STATUS CreateInstance(int instanceType, std::string instanceID, KODI_HANDLE instance, KODI_HANDLE& addonInstance) override
   {
     if (instanceType == ADDON_INSTANCE_INPUTSTREAM)
     {
