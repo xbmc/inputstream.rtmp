@@ -43,7 +43,7 @@ std::map<std::string, AVal> options =
   { "IsLive",    AVC("live")    }};
 }
 
-class CInputStreamRTMP
+class ATTRIBUTE_HIDDEN CInputStreamRTMP
   : public kodi::addon::CInstanceInputStream
 {
 public:
@@ -160,7 +160,7 @@ bool CInputStreamRTMP::PosTime(int ms)
 
 /*****************************************************************************************************/
 
-class CMyAddon
+class ATTRIBUTE_HIDDEN CMyAddon
   : public kodi::addon::CAddonBase
 {
 public:
