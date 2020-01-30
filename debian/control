@@ -3,7 +3,7 @@ Priority: extra
 Maintainer: Arne Morten Kvarving <spiff@xbmc.org>
 Build-Depends: debhelper (>= 9.0.0), cmake,
                kodi-addon-dev, pkg-config, libssl-dev, zlib1g-dev, librtmp-dev
-Standards-Version: 3.9.6
+Standards-Version: 4.1.2
 Section: libs
 
 Package: kodi-inputstream-rtmp
