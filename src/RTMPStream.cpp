@@ -31,9 +31,9 @@
 #define  SetAVal(av, cstr)  av.av_val = (char *)cstr; av.av_len = strlen(cstr)
 #undef AVC
 #define AVC(str)  {(char *)str,sizeof(str)-1}
-      
+
 /* librtmp option names are slightly different */
-std::map<std::string, AVal> options = 
+std::map<std::string, AVal> options =
  {{ "SWFPlayer", AVC("swfUrl")  },
   { "PageURL",   AVC("pageUrl") },
   { "PlayPath",  AVC("playpath")},
