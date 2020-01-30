@@ -81,7 +81,7 @@ bool CInputStreamRTMP::Open(INPUTSTREAM& props)
   m_session = RTMP_Alloc();
   RTMP_Init(m_session);
 
-  RTMP_SetupURL(m_session, (char*)props.m_strURL);
+  RTMP_SetupURL(m_session, const_cast<char*>(props.m_strURL));
   for (auto& it : options)
   {
     for (size_t i = 0; i < props.m_nCountInfoValues; ++i)
@@ -144,7 +144,7 @@ void CInputStreamRTMP::EnableStream(int streamid, bool enable)
 
 int CInputStreamRTMP::ReadStream(uint8_t* buf, unsigned int size)
 {
-  return RTMP_Read(m_session, (char*)buf, size);
+  return RTMP_Read(m_session, reinterpret_cast<char*>(buf), size);
 }
 
 void CInputStreamRTMP::PauseStream(double time)
