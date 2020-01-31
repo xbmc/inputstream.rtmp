@@ -31,35 +31,38 @@
 #define  SetAVal(av, cstr)  av.av_val = (char *)cstr; av.av_len = strlen(cstr)
 #undef AVC
 #define AVC(str)  {(char *)str,sizeof(str)-1}
-      
+
 /* librtmp option names are slightly different */
-std::map<std::string, AVal> options = 
+namespace
+{
+std::map<std::string, AVal> options =
  {{ "SWFPlayer", AVC("swfUrl")  },
   { "PageURL",   AVC("pageUrl") },
   { "PlayPath",  AVC("playpath")},
   { "TcUrl",     AVC("tcUrl")   },
   { "IsLive",    AVC("live")    }};
+}
 
-class CInputStreamRTMP
+class ATTRIBUTE_HIDDEN CInputStreamRTMP
   : public kodi::addon::CInstanceInputStream
 {
 public:
   CInputStreamRTMP(KODI_HANDLE instance);
 
-  virtual bool Open(INPUTSTREAM& props) override;
-  virtual void Close() override;
-  virtual void GetCapabilities(INPUTSTREAM_CAPABILITIES& caps) override;
-  virtual INPUTSTREAM_IDS GetStreamIds() override;
-  virtual INPUTSTREAM_INFO GetStream(int streamid) override;
-  virtual void EnableStream(int streamid, bool enable) override;
-  virtual bool OpenStream(int streamid) override;
-  virtual int ReadStream(uint8_t* buffer, unsigned int bufferSize) override;
-  virtual void PauseStream(double time) override;
-  virtual bool PosTime(int ms) override;
-  virtual int GetTotalTime() override { return 20; }
-  virtual int GetTime() override { return 0; }
-  virtual bool CanPauseStream() override { return true; }
-  virtual bool CanSeekStream() override { return true; }
+  bool Open(INPUTSTREAM& props) override;
+  void Close() override;
+  void GetCapabilities(INPUTSTREAM_CAPABILITIES& caps) override;
+  INPUTSTREAM_IDS GetStreamIds() override;
+  INPUTSTREAM_INFO GetStream(int streamid) override;
+  void EnableStream(int streamid, bool enable) override;
+  bool OpenStream(int streamid) override;
+  int ReadStream(uint8_t* buffer, unsigned int bufferSize) override;
+  void PauseStream(double time) override;
+  bool PosTime(int ms) override;
+  int GetTotalTime() override { return 20; }
+  int GetTime() override { return 0; }
+  bool CanPauseStream() override { return true; }
+  bool CanSeekStream() override { return true; }
 
 private:
   RTMP* m_session = nullptr;
@@ -78,7 +81,7 @@ bool CInputStreamRTMP::Open(INPUTSTREAM& props)
   m_session = RTMP_Alloc();
   RTMP_Init(m_session);
 
-  RTMP_SetupURL(m_session, (char*)props.m_strURL);
+  RTMP_SetupURL(m_session, const_cast<char*>(props.m_strURL));
   for (auto& it : options)
   {
     for (size_t i = 0; i < props.m_nCountInfoValues; ++i)
@@ -141,7 +144,7 @@ void CInputStreamRTMP::EnableStream(int streamid, bool enable)
 
 int CInputStreamRTMP::ReadStream(uint8_t* buf, unsigned int size)
 {
-  return RTMP_Read(m_session, (char*)buf, size);
+  return RTMP_Read(m_session, reinterpret_cast<char*>(buf), size);
 }
 
 void CInputStreamRTMP::PauseStream(double time)
@@ -157,12 +160,12 @@ bool CInputStreamRTMP::PosTime(int ms)
 
 /*****************************************************************************************************/
 
-class CMyAddon
+class ATTRIBUTE_HIDDEN CMyAddon
   : public kodi::addon::CAddonBase
 {
 public:
-  CMyAddon() { }
-  virtual ADDON_STATUS CreateInstance(int instanceType, std::string instanceID, KODI_HANDLE instance, KODI_HANDLE& addonInstance) override
+  CMyAddon() = default;
+  ADDON_STATUS CreateInstance(int instanceType, std::string instanceID, KODI_HANDLE instance, KODI_HANDLE& addonInstance) override
   {
     if (instanceType == ADDON_INSTANCE_INPUTSTREAM)
     {

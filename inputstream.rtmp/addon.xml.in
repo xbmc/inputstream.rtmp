@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="inputstream.rtmp"
-  version="2.0.7"
+  version="2.0.8"
   name="RTMP Input"
   provider-name="spiff">
   <requires>@ADDON_DEPENDS@</requires>
@@ -11,8 +11,16 @@
     protocols="rtmp|rtmpt|rtmpe|rtmpte|rtmps"
     library_@PLATFORM@="@LIBRARY_FILENAME@" />
   <extension point="xbmc.addon.metadata">
-    <summary lang="en">InputStream Client for RTMP streams</summary>
-    <description lang="en">InputStream Client for RTMP streams using librtmp</description>
+    <summary lang="en">Client for RTMP streams</summary>
+    <description lang="en">The Real Time Messaging Protocol (RTMP) is a proprietary network protocol developed by Adobe Inc. to transmit audio, video and other data over the Internet from a media server to a flash player.
+
+This addon implements RTMP streaming support for Kodi and installed add-ons.
+</description>
     <platform>@PLATFORM@</platform>
+    <license>GPL-2.0</license>
+    <source>https://github.com/xbmc/inputstream.rtmp</source>
+    <assets>
+      <icon>icon.png</icon>
+    </assets>
   </extension>
 </addon>

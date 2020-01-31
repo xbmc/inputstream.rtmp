@@ -16,20 +16,20 @@ include_directories(${INCLUDES}
                     ${OPENSSL_INCLUDE_DIR}
                     ${ZLIB_INCLUDE_DIRS}
                     ${KODI_INCLUDE_DIR}/..) # Hack way with "/..", need bigger Kodi cmake rework to match right include ways (becomes done in future)
-                    
+
 list(APPEND DEPLIBS ${RTMP_LIBRARIES} ${OPENSSL_LIBRARIES} ${ZLIB_LIBRARIES})
 
 if(CORE_SYSTEM_NAME MATCHES "windows")
-	list(APPEND DEPLIBS Winmm.lib WS2_32.lib)
+  list(APPEND DEPLIBS Winmm.lib WS2_32.lib)
 endif()
 
 build_addon(inputstream.rtmp RTMP DEPLIBS)
 
 if(CORE_SYSTEM_NAME STREQUAL windowsstore)
-    # fix linking
-    set_target_properties(inputstream.rtmp PROPERTIES LINK_FLAGS_RELWITHDEBINFO "/LTCG /defaultlib:vccorlib.lib /defaultlib:msvcrt.lib")
-    set_target_properties(inputstream.rtmp PROPERTIES LINK_FLAGS_RELEASE "/LTCG /defaultlib:vccorlib.lib /defaultlib:msvcrt.lib")
-    set_target_properties(inputstream.rtmp PROPERTIES LINK_FLAGS_DEBUG "/LTCG /defaultlib:vccorlibd.lib /defaultlib:msvcrtd.lib")
+  # fix linking
+  set_target_properties(inputstream.rtmp PROPERTIES LINK_FLAGS_RELWITHDEBINFO "/LTCG /defaultlib:vccorlib.lib /defaultlib:msvcrt.lib")
+  set_target_properties(inputstream.rtmp PROPERTIES LINK_FLAGS_RELEASE "/LTCG /defaultlib:vccorlib.lib /defaultlib:msvcrt.lib")
+  set_target_properties(inputstream.rtmp PROPERTIES LINK_FLAGS_DEBUG "/LTCG /defaultlib:vccorlibd.lib /defaultlib:msvcrtd.lib")
 endif()
 
 include(CPack)
