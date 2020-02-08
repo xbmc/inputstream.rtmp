@@ -4,7 +4,7 @@ project(openssl VERSION 1.1.1 LANGUAGES C)
 
 find_package(StrawberryPerl REQUIRED)
 
-include(CheckSymbolExists) 
+include(CheckSymbolExists)
 check_symbol_exists(_X86_ "Windows.h" _X86_)
 check_symbol_exists(_AMD64_ "Windows.h" _AMD64_)
 
