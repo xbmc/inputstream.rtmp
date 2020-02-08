@@ -3,7 +3,8 @@
 This is a [Kodi](https://kodi.tv) input stream addon for RTMP.
 
 [![Build Status](https://travis-ci.org/xbmc/inputstream.rtmp.svg?branch=Matrix)](https://travis-ci.org/xbmc/inputstream.rtmp/branches)
-[![Build Status](https://ci.appveyor.com/api/projects/status/github/xbmc/inputstream.rtmp?branch=Matrix&svg=true)](https://ci.appveyor.com/project/xbmc/inputstream-rtmp?branch=Matrix)
+[![Build Status](https://dev.azure.com/teamkodi/binary-addons/_apis/build/status/xbmc.inputstream.rtmp?branchName=Matrix)](https://dev.azure.com/teamkodi/binary-addons/_build/latest?definitionId=29&branchName=Matrix)
+<!--- [![Build Status](https://ci.appveyor.com/api/projects/status/github/xbmc/inputstream.rtmp?branch=Matrix&svg=true)](https://ci.appveyor.com/project/xbmc/inputstream-rtmp?branch=Matrix) -->
 
 ## Build instructions
 
