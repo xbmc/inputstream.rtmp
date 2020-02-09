@@ -1,5 +1,6 @@
 /*
- *      Copyright (C) 2016 Arne Morten Kvarving
+ *      Copyright (C) 2016-2020 Arne Morten Kvarving
+ *      Copyright (C) 2018-2020 Team Kodi
  *
  *  This Program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
