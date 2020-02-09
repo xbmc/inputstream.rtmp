@@ -3,7 +3,8 @@
 This is a [Kodi](http://kodi.tv) input stream addon for RTMP.
 
 [![Build Status](https://travis-ci.org/xbmc/inputstream.rtmp.svg?branch=master)](https://travis-ci.org/xbmc/inputstream.rtmp)
-[![Build Status](https://ci.appveyor.com/api/projects/status/github/xbmc/inputstream.rtmp?svg=true)](https://ci.appveyor.com/project/xbmc/inputstream-rtmp)
+[![Build Status](https://dev.azure.com/teamkodi/binary-addons/_apis/build/status/xbmc.inputstream.rtmp?branchName=Leia)](https://dev.azure.com/teamkodi/binary-addons/_build/latest?definitionId=29&branchName=Leia)
+<!--- [![Build Status](https://ci.appveyor.com/api/projects/status/github/xbmc/inputstream.rtmp?svg=true)](https://ci.appveyor.com/project/xbmc/inputstream-rtmp) -->
 
 ## Build instructions
 
