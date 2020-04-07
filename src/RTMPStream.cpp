@@ -62,8 +62,6 @@ public:
   bool PosTime(int ms) override;
   int GetTotalTime() override { return 20; }
   int GetTime() override { return 0; }
-  bool CanPauseStream() override { return true; }
-  bool CanSeekStream() override { return true; }
 
 private:
   RTMP* m_session = nullptr;
@@ -125,6 +123,8 @@ void CInputStreamRTMP::Close()
 void CInputStreamRTMP::GetCapabilities(INPUTSTREAM_CAPABILITIES &caps)
 {
   caps.m_mask |= INPUTSTREAM_CAPABILITIES::SUPPORTS_IPOSTIME;
+  caps.m_mask |= INPUTSTREAM_CAPABILITIES::SUPPORTS_SEEK;
+  caps.m_mask |= INPUTSTREAM_CAPABILITIES::SUPPORTS_PAUSE;
 }
 
 INPUTSTREAM_IDS CInputStreamRTMP::GetStreamIds()
