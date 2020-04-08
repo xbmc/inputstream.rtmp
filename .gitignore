@@ -9,7 +9,7 @@ debian/*.log
 debian/*.substvars
 debian/.debhelper/
 debian/tmp/
-debian/kodi-inputstream-*/
+debian/kodi-pvr-*/
 obj-x86_64-linux-gnu/
 
 # commonly used editors
@@ -37,6 +37,9 @@ obj-x86_64-linux-gnu/
 
 # to prevent add after a "git format-patch VALUE" and "git add ." call
 /*.patch
+
+# Visual Studio Code
+.vscode
 
 # to prevent add if project code opened by Visual Studio over CMake file
 .vs/
