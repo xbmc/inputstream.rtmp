@@ -16,6 +16,7 @@
  *
  */
 
+#include "utils/Log.h"
 #include "timer/Timer.h"
 
 #include <iostream>
@@ -82,7 +83,7 @@ CInputStreamRTMP::CInputStreamRTMP(KODI_HANDLE instance)
 
 bool CInputStreamRTMP::Open(INPUTSTREAM& props)
 {
-  kodi::Log(ADDON_LOG_DEBUG, "InputStream.rtmp: OpenStream()");
+  rtmpstream::Log(ADDON_LOG_DEBUG, "InputStream.rtmp: OpenStream()");
 
   m_session = RTMP_Alloc();
   RTMP_Init(m_session);
@@ -162,7 +163,7 @@ int CInputStreamRTMP::ReadStream(uint8_t* buf, unsigned int size)
   {
     m_readPauseDetected = false;
     RTMP_Pause(m_session, false);
-    kodi::Log(ADDON_LOG_DEBUG, "InputStream.rtmp: Read resume detected");
+    rtmpstream::Log(ADDON_LOG_DEBUG, "InputStream.rtmp: Read resume detected");
   }
 
   if (m_readPauseDetectTimer.IsRunning())
@@ -178,7 +179,7 @@ void CInputStreamRTMP::OnTimeout()
   std::unique_lock<std::recursive_mutex> lock(m_critSection);
   m_readPauseDetected = true;
 
-  kodi::Log(ADDON_LOG_DEBUG, "InputStream.rtmp: Read pause detected");
+  rtmpstream::Log(ADDON_LOG_DEBUG, "InputStream.rtmp: Read pause detected");
 
   RTMP_Pause(m_session, true);
 }
