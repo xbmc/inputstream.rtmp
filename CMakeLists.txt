@@ -9,7 +9,12 @@ find_package(OpenSSL REQUIRED)
 find_package(ZLIB REQUIRED)
 find_package(RTMP REQUIRED)
 
-set(RTMP_SOURCES src/RTMPStream.cpp)
+set(RTMP_SOURCES src/RTMPStream.cpp
+                 src/timer/Timer.cpp)
+
+set(RTMP_HEADERS src/utils/Log.h
+                 src/timer/Timer.h
+                 src/timer/TimerHelper.h)
 
 include_directories(${INCLUDES}
                     ${RTMP_INCLUDE_DIRS}
