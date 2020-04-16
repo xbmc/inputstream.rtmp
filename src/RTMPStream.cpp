@@ -16,6 +16,9 @@
  *
  */
 
+#include "utils/Log.h"
+#include "timer/Timer.h"
+
 #include <iostream>
 #include <map>
 #include <string.h>
@@ -45,7 +48,8 @@ std::map<std::string, AVal> options =
 }
 
 class ATTRIBUTE_HIDDEN CInputStreamRTMP
-  : public kodi::addon::CInstanceInputStream
+  : public kodi::addon::CInstanceInputStream,
+    public rtmpstream::ITimerCallback
 {
 public:
   CInputStreamRTMP(KODI_HANDLE instance);
@@ -58,24 +62,28 @@ public:
   void EnableStream(int streamid, bool enable) override;
   bool OpenStream(int streamid) override;
   int ReadStream(uint8_t* buffer, unsigned int bufferSize) override;
-  void PauseStream(double time) override;
   bool PosTime(int ms) override;
   int GetTotalTime() override { return 20; }
   int GetTime() override { return 0; }
 
 private:
+  void OnTimeout() override;
+
   RTMP* m_session = nullptr;
-  bool m_paused = false;
+  bool m_readPauseDetected = false;
+  mutable std::recursive_mutex m_critSection;
+  rtmpstream::CTimer m_readPauseDetectTimer;
 };
 
 CInputStreamRTMP::CInputStreamRTMP(KODI_HANDLE instance)
-  : CInstanceInputStream(instance)
+  : CInstanceInputStream(instance),
+    m_readPauseDetectTimer(this)
 {
 }
 
 bool CInputStreamRTMP::Open(INPUTSTREAM& props)
 {
-  kodi::Log(ADDON_LOG_DEBUG, "InputStream.rtmp: OpenStream()");
+  rtmpstream::Log(ADDON_LOG_DEBUG, "InputStream.rtmp: OpenStream()");
 
   m_session = RTMP_Alloc();
   RTMP_Init(m_session);
@@ -111,13 +119,18 @@ bool CInputStreamRTMP::OpenStream(int streamid)
 
 void CInputStreamRTMP::Close()
 {
+  m_readPauseDetectTimer.Stop();
+
   if (m_session)
   {
+    std::unique_lock<std::recursive_mutex> lock(m_critSection);
+
     RTMP_Close(m_session);
     RTMP_Free(m_session);
   }
+
   m_session = nullptr;
-  m_paused = false;
+  m_readPauseDetected = false;
 }
 
 void CInputStreamRTMP::GetCapabilities(INPUTSTREAM_CAPABILITIES &caps)
@@ -145,17 +158,36 @@ void CInputStreamRTMP::EnableStream(int streamid, bool enable)
 
 int CInputStreamRTMP::ReadStream(uint8_t* buf, unsigned int size)
 {
+  std::unique_lock<std::recursive_mutex> lock(m_critSection);
+  if (m_readPauseDetected)
+  {
+    m_readPauseDetected = false;
+    RTMP_Pause(m_session, false);
+    rtmpstream::Log(ADDON_LOG_DEBUG, "InputStream.rtmp: Read resume detected");
+  }
+
+  if (m_readPauseDetectTimer.IsRunning())
+    m_readPauseDetectTimer.RestartAsync(2 * 1000);
+  else
+    m_readPauseDetectTimer.Start(2 * 1000);
+
   return RTMP_Read(m_session, reinterpret_cast<char*>(buf), size);
 }
 
-void CInputStreamRTMP::PauseStream(double time)
+void CInputStreamRTMP::OnTimeout()
 {
-  m_paused = !m_paused;
-  RTMP_Pause(m_session, m_paused);
+  std::unique_lock<std::recursive_mutex> lock(m_critSection);
+  m_readPauseDetected = true;
+
+  rtmpstream::Log(ADDON_LOG_DEBUG, "InputStream.rtmp: Read pause detected");
+
+  RTMP_Pause(m_session, true);
 }
 
 bool CInputStreamRTMP::PosTime(int ms)
 {
+  std::unique_lock<std::recursive_mutex> lock(m_critSection);
+
   return RTMP_SendSeek(m_session, ms);
 }
 
