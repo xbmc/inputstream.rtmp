@@ -52,7 +52,7 @@ class ATTRIBUTE_HIDDEN CInputStreamRTMP
     public rtmpstream::ITimerCallback
 {
 public:
-  CInputStreamRTMP(KODI_HANDLE instance);
+  CInputStreamRTMP(KODI_HANDLE instance, const std::string& instanceID);
 
   bool Open(INPUTSTREAM& props) override;
   void Close() override;
@@ -75,8 +75,8 @@ private:
   rtmpstream::CTimer m_readPauseDetectTimer;
 };
 
-CInputStreamRTMP::CInputStreamRTMP(KODI_HANDLE instance)
-  : CInstanceInputStream(instance),
+CInputStreamRTMP::CInputStreamRTMP(KODI_HANDLE instance, const std::string& instanceID)
+  : CInstanceInputStream(instance, instanceID),
     m_readPauseDetectTimer(this)
 {
 }
@@ -198,11 +198,16 @@ class ATTRIBUTE_HIDDEN CMyAddon
 {
 public:
   CMyAddon() = default;
-  ADDON_STATUS CreateInstance(int instanceType, std::string instanceID, KODI_HANDLE instance, KODI_HANDLE& addonInstance) override
+  ADDON_STATUS CreateInstance(int instanceType,
+                              const std::string& instanceID,
+                              KODI_HANDLE instance,
+                              const std::string& version,
+                              KODI_HANDLE& addonInstance) override
+
   {
     if (instanceType == ADDON_INSTANCE_INPUTSTREAM)
     {
-      addonInstance = new CInputStreamRTMP(instance);
+      addonInstance = new CInputStreamRTMP(instance, version);
       return ADDON_STATUS_OK;
     }
     return ADDON_STATUS_NOT_IMPLEMENTED;
