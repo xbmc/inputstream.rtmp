@@ -11,8 +11,8 @@
     protocols="rtmp|rtmpt|rtmpe|rtmpte|rtmps"
     library_@PLATFORM@="@LIBRARY_FILENAME@" />
   <extension point="xbmc.addon.metadata">
-    <summary lang="en">Client for RTMP streams</summary>
-    <description lang="en">The Real Time Messaging Protocol (RTMP) is a proprietary network protocol developed by Adobe Inc. to transmit audio, video and other data over the Internet from a media server to a flash player.
+    <summary lang="en_GB">Client for RTMP streams</summary>
+    <description lang="en_GB">The Real Time Messaging Protocol (RTMP) is a proprietary network protocol developed by Adobe Inc. to transmit audio, video and other data over the Internet from a media server to a flash player.
 
 This addon implements RTMP streaming support for Kodi and installed add-ons.
 </description>
