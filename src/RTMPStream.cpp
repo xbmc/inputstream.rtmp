@@ -1,19 +1,9 @@
 /*
- *      Copyright (C) 2016-2020 Arne Morten Kvarving
- *      Copyright (C) 2018-2020 Team Kodi
+ *  Copyright (C) 2016-2020 Arne Morten Kvarving
+ *  Copyright (C) 2018-2020 Team Kodi
  *
- *  This Program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2, or (at your option)
- *  any later version.
- *
- *  This Program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU General Public License for more details.
- *
- *  <http://www.gnu.org/licenses/>.
- *
+ *  SPDX-License-Identifier: GPL-2.0-or-later
+ *  See LICENSE.md for more information.
  */
 
 #include "utils/Log.h"
@@ -52,7 +42,7 @@ class ATTRIBUTE_HIDDEN CInputStreamRTMP
     public rtmpstream::ITimerCallback
 {
 public:
-  CInputStreamRTMP(KODI_HANDLE instance);
+  CInputStreamRTMP(KODI_HANDLE instance, const std::string& instanceID);
 
   bool Open(INPUTSTREAM& props) override;
   void Close() override;
@@ -75,8 +65,8 @@ private:
   rtmpstream::CTimer m_readPauseDetectTimer;
 };
 
-CInputStreamRTMP::CInputStreamRTMP(KODI_HANDLE instance)
-  : CInstanceInputStream(instance),
+CInputStreamRTMP::CInputStreamRTMP(KODI_HANDLE instance, const std::string& instanceID)
+  : CInstanceInputStream(instance, instanceID),
     m_readPauseDetectTimer(this)
 {
 }
@@ -198,11 +188,16 @@ class ATTRIBUTE_HIDDEN CMyAddon
 {
 public:
   CMyAddon() = default;
-  ADDON_STATUS CreateInstance(int instanceType, std::string instanceID, KODI_HANDLE instance, KODI_HANDLE& addonInstance) override
+  ADDON_STATUS CreateInstance(int instanceType,
+                              const std::string& instanceID,
+                              KODI_HANDLE instance,
+                              const std::string& version,
+                              KODI_HANDLE& addonInstance) override
+
   {
     if (instanceType == ADDON_INSTANCE_INPUTSTREAM)
     {
-      addonInstance = new CInputStreamRTMP(instance);
+      addonInstance = new CInputStreamRTMP(instance, version);
       return ADDON_STATUS_OK;
     }
     return ADDON_STATUS_NOT_IMPLEMENTED;
