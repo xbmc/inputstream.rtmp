@@ -30,11 +30,13 @@
 namespace
 {
 std::map<std::string, AVal> options =
- {{ "SWFPlayer", AVC("swfUrl")  },
-  { "PageURL",   AVC("pageUrl") },
-  { "PlayPath",  AVC("playpath")},
-  { "TcUrl",     AVC("tcUrl")   },
-  { "IsLive",    AVC("live")    }};
+ {{ "inputstream.rtmp.SWFPlayer", AVC("swfUrl")  },
+  { "inputstream.rtmp.swfurl",    AVC("swfUrl")  },
+  { "inputstream.rtmp.PageURL",   AVC("pageUrl") },
+  { "inputstream.rtmp.PlayPath",  AVC("playpath")},
+  { "inputstream.rtmp.TcUrl",     AVC("tcUrl")   },
+  { "inputstream.rtmp.IsLive",    AVC("live")    },
+  { "inputstream.rtmp.swfvfy",    AVC("swfVfy")  }};
 }
 
 class ATTRIBUTE_HIDDEN CInputStreamRTMP
@@ -42,15 +44,11 @@ class ATTRIBUTE_HIDDEN CInputStreamRTMP
     public rtmpstream::ITimerCallback
 {
 public:
-  CInputStreamRTMP(KODI_HANDLE instance, const std::string& instanceID);
+  CInputStreamRTMP(KODI_HANDLE instance, const std::string& kodiVersion);
 
-  bool Open(INPUTSTREAM& props) override;
+  bool Open(const kodi::addon::InputstreamProperty& props) override;
   void Close() override;
-  void GetCapabilities(INPUTSTREAM_CAPABILITIES& caps) override;
-  INPUTSTREAM_IDS GetStreamIds() override;
-  INPUTSTREAM_INFO GetStream(int streamid) override;
-  void EnableStream(int streamid, bool enable) override;
-  bool OpenStream(int streamid) override;
+  void GetCapabilities(kodi::addon::InputstreamCapabilities& caps) override;
   int ReadStream(uint8_t* buffer, unsigned int bufferSize) override;
   bool PosTime(int ms) override;
   int GetTotalTime() override { return 20; }
@@ -65,30 +63,32 @@ private:
   rtmpstream::CTimer m_readPauseDetectTimer;
 };
 
-CInputStreamRTMP::CInputStreamRTMP(KODI_HANDLE instance, const std::string& instanceID)
-  : CInstanceInputStream(instance, instanceID),
+CInputStreamRTMP::CInputStreamRTMP(KODI_HANDLE instance, const std::string& kodiVersion)
+  : CInstanceInputStream(instance, kodiVersion),
     m_readPauseDetectTimer(this)
 {
 }
 
-bool CInputStreamRTMP::Open(INPUTSTREAM& props)
+bool CInputStreamRTMP::Open(const kodi::addon::InputstreamProperty& props)
 {
-  rtmpstream::Log(ADDON_LOG_DEBUG, "InputStream.rtmp: OpenStream()");
+  const std::string url = props.GetURL();
+  const std::map<std::string, std::string> infoValues = props.GetProperties();
+
+  rtmpstream::Log(ADDON_LOG_DEBUG, "InputStream.rtmp: OpenStream() URL: '%s'", url.c_str());
 
   m_session = RTMP_Alloc();
   RTMP_Init(m_session);
 
-  RTMP_SetupURL(m_session, const_cast<char*>(props.m_strURL));
+  RTMP_SetupURL(m_session, const_cast<char*>(url.c_str()));
+
   for (auto& it : options)
   {
-    for (size_t i = 0; i < props.m_nCountInfoValues; ++i)
+    auto info = infoValues.find(it.first);
+    if (info != infoValues.end())
     {
-      if (it.first == props.m_ListItemProperties[i].m_strKey)
-      {
-        AVal av_tmp;
-        SetAVal(av_tmp, props.m_ListItemProperties[i].m_strValue);
-        RTMP_SetOpt(m_session, &it.second, &av_tmp);
-      }
+      AVal av_tmp;
+      SetAVal(av_tmp, info->second.c_str());
+      RTMP_SetOpt(m_session, &it.second, &av_tmp);
     }
   }
 
@@ -100,11 +100,6 @@ bool CInputStreamRTMP::Open(INPUTSTREAM& props)
   }
 
   return true;
-}
-
-bool CInputStreamRTMP::OpenStream(int streamid)
-{
-  return false;
 }
 
 void CInputStreamRTMP::Close()
@@ -123,27 +118,11 @@ void CInputStreamRTMP::Close()
   m_readPauseDetected = false;
 }
 
-void CInputStreamRTMP::GetCapabilities(INPUTSTREAM_CAPABILITIES &caps)
+void CInputStreamRTMP::GetCapabilities(kodi::addon::InputstreamCapabilities& caps)
 {
-  caps.m_mask |= INPUTSTREAM_CAPABILITIES::SUPPORTS_IPOSTIME;
-  caps.m_mask |= INPUTSTREAM_CAPABILITIES::SUPPORTS_SEEK;
-  caps.m_mask |= INPUTSTREAM_CAPABILITIES::SUPPORTS_PAUSE;
-}
-
-INPUTSTREAM_IDS CInputStreamRTMP::GetStreamIds()
-{
-  INPUTSTREAM_IDS ids = { 0 };
-  return ids;
-}
-
-INPUTSTREAM_INFO CInputStreamRTMP::GetStream(int streamid)
-{
-  INPUTSTREAM_INFO info = { INPUTSTREAM_INFO::STREAM_TYPE::TYPE_NONE };
-  return info;
-}
-
-void CInputStreamRTMP::EnableStream(int streamid, bool enable)
-{
+  caps.SetMask(INPUTSTREAM_SUPPORTS_IPOSTIME |
+               INPUTSTREAM_SUPPORTS_SEEK |
+               INPUTSTREAM_SUPPORTS_PAUSE);
 }
 
 int CInputStreamRTMP::ReadStream(uint8_t* buf, unsigned int size)

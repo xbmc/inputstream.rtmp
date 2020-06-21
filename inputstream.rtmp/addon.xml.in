@@ -9,6 +9,7 @@
     point="kodi.inputstream"
     name="rtmp"
     protocols="rtmp|rtmpt|rtmpe|rtmpte|rtmps"
+    listitemprops="SWFPlayer|swfurl|PageURL|PlayPath|TcUrl|IsLive|swfvfy"
     library_@PLATFORM@="@LIBRARY_FILENAME@" />
   <extension point="xbmc.addon.metadata">
     <summary lang="de_DE">Client für RTMP-Streams</summary>
