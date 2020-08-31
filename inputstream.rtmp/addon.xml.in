@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="inputstream.rtmp"
-  version="3.1.1"
+  version="3.2.0"
   name="RTMP Input"
   provider-name="spiff">
   <requires>@ADDON_DEPENDS@</requires>
@@ -26,6 +26,11 @@ This addon implements RTMP streaming support for Kodi and installed add-ons.</de
       <icon>icon.png</icon>
     </assets>
     <news>
+v3.2.0
+- Matrix API change inputstream API 2.3.4
+- Add german translation
+- Improve debian package build and add test to Travis CI
+
 v3.1.1
 - Bump verion for PPA build Global API 1.2.0 and inputstream API 2.3.1
 
