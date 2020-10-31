@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="inputstream.rtmp"
-  version="3.2.0"
+  version="3.3.0"
   name="RTMP Input"
   provider-name="spiff">
   <requires>@ADDON_DEPENDS@</requires>
@@ -9,6 +9,7 @@
     point="kodi.inputstream"
     name="rtmp"
     protocols="rtmp|rtmpt|rtmpe|rtmpte|rtmps"
+    listitemprops="SWFPlayer|swfurl|PageURL|PlayPath|TcUrl|IsLive|swfvfy"
     library_@PLATFORM@="@LIBRARY_FILENAME@" />
   <extension point="xbmc.addon.metadata">
     <summary lang="de_DE">Client für RTMP-Streams</summary>
@@ -26,6 +27,17 @@ This addon implements RTMP streaming support for Kodi and installed add-ons.</de
       <icon>icon.png</icon>
     </assets>
     <news>
+v3.3.0
+- Update inputstream API 3.0.0
+- Fix and allow use of stream values:
+  - SWFPlayer
+  - swfurl (same as SWFPlayer)
+  - PageURL
+  - PlayPath
+  - TcUrl
+  - IsLive
+  - swfvfy
+
 v3.2.0
 - Matrix API change inputstream API 2.3.4
 - Add german translation
