@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="inputstream.rtmp"
-  version="3.3.0"
+  version="3.4.0"
   name="RTMP Input"
   provider-name="spiff">
   <requires>@ADDON_DEPENDS@</requires>
@@ -26,7 +26,10 @@ This addon implements RTMP streaming support for Kodi and installed add-ons.</de
     <assets>
       <icon>icon.png</icon>
     </assets>
-    <news>
+    <news>v3.4.0
+- Update: inputstream API 3.0.1
+  - Fix wrong flags bit shift
+
 v3.3.0
 - Update inputstream API 3.0.0
 - Fix and allow use of stream values:
