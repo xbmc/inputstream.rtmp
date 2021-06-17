@@ -15,7 +15,7 @@
 +  if (!g)
 +    goto failed;
 +
-+  DH_set0_pqg(dh, NULL, g, NULL);
++  DH_set0_pqg(dh, NULL, NULL, g);
 +#endif
  
 +#if !defined(USE_OPENSSL) || !defined(OPENSSL_VERSION_NUMBER) || OPENSSL_VERSION_NUMBER < 0x10100000L
@@ -34,7 +34,7 @@
    MP_set_w(dh->g, 2);	/* base 2 */
 +#else
 +  MP_set_w(g, 2);   /* base 2 */
-+  DH_set0_pqg(dh, NULL, g, NULL);
++  DH_set0_pqg(dh, NULL, NULL, g);
 +#endif
  
 +#if !defined(USE_OPENSSL) || !defined(OPENSSL_VERSION_NUMBER) || OPENSSL_VERSION_NUMBER < 0x10100000L
