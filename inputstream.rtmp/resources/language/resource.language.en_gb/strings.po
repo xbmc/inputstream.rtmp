@@ -23,4 +23,3 @@ msgstr ""
 msgctxt "Addon Description"
 msgid "The Real Time Messaging Protocol (RTMP) is a proprietary network protocol developed by Adobe Inc. to transmit audio, video and other data over the Internet from a media server to a flash player.[CR][CR]This addon implements RTMP streaming support for Kodi and installed add-ons."
 msgstr ""
-
