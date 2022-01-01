@@ -1,0 +1,46 @@
+v20.1.0:
+- Translation updates by Weblate
+- Kodi main API update to version 2.0.0
+
+v20.0.0
+- Changed test builds to 'Kodi 20 Nexus'
+- Prepared for new language translation by Weblate
+- Increased version to 20.0.0
+  - With start of Kodi 20 Nexus, takes addon as major the same version number as Kodi.
+    This done to know easier to which Kodi the addon works.
+
+v3.4.0
+- Update: inputstream API 3.0.1
+  - Fix wrong flags bit shift
+
+v3.3.0
+- Update inputstream API 3.0.0
+- Fix and allow use of stream values:
+  - SWFPlayer
+  - swfurl (same as SWFPlayer)
+  - PageURL
+  - PlayPath
+  - TcUrl
+  - IsLive
+  - swfvfy
+
+v3.2.0
+- Matrix API change inputstream API 2.3.4
+- Add german translation
+- Improve debian package build and add test to Travis CI
+
+v3.1.1
+- Bump verion for PPA build Global API 1.2.0 and inputstream API 2.3.1
+
+v3.1.0
+- Matrix API change inputstream API 2.3.1
+- Matrix APi change Global API 1.2.0
+
+v3.0.5
+- Matrix API change to v2.3.0 - Re-release API change
+
+v3.0.4
+- Matrix API change to v2.3.0 - Pass mime type to inputstreams if available
+
+v3.0.3
+- Matrix API change to v2.2.0 - Allows upto 256 streams

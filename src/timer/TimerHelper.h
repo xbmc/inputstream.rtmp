@@ -25,7 +25,7 @@ inline std::string NowToString()
   return std::ctime(&t);
 }
 
-class ATTRIBUTE_HIDDEN CTimeout
+class ATTR_DLL_LOCAL CTimeout
 {
 public:
   CTimeout(void) : m_iTarget(0)
@@ -60,7 +60,7 @@ private:
 typedef bool (*PredicateCallback) (void *param);
 
 template <typename _Predicate>
-class ATTRIBUTE_HIDDEN CCondition
+class ATTR_DLL_LOCAL CCondition
 {
 private:
   static bool _PredicateCallbackDefault ( void *param )
@@ -119,7 +119,7 @@ private:
   std::condition_variable_any m_condition;
 };
 
-class ATTRIBUTE_HIDDEN CEvent
+class ATTR_DLL_LOCAL CEvent
 {
 public:
   CEvent(bool bAutoReset = true) :

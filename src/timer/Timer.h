@@ -14,7 +14,7 @@
 namespace rtmpstream
 {
 
-class ATTRIBUTE_HIDDEN ITimerCallback
+class ATTR_DLL_LOCAL ITimerCallback
 {
 public:
   virtual ~ITimerCallback() = default;
@@ -22,7 +22,7 @@ public:
   virtual void OnTimeout() = 0;
 };
 
-class ATTRIBUTE_HIDDEN CTimer
+class ATTR_DLL_LOCAL CTimer
 {
 public:
   explicit CTimer(ITimerCallback *callback);
