@@ -39,12 +39,12 @@ std::map<std::string, AVal> options =
   { "inputstream.rtmp.swfvfy",    AVC("swfVfy")  }};
 }
 
-class ATTRIBUTE_HIDDEN CInputStreamRTMP
+class ATTR_DLL_LOCAL CInputStreamRTMP
   : public kodi::addon::CInstanceInputStream,
     public rtmpstream::ITimerCallback
 {
 public:
-  CInputStreamRTMP(KODI_HANDLE instance, const std::string& kodiVersion);
+  CInputStreamRTMP(const kodi::addon::IInstanceInfo& instance);
 
   bool Open(const kodi::addon::InputstreamProperty& props) override;
   void Close() override;
@@ -63,8 +63,8 @@ private:
   rtmpstream::CTimer m_readPauseDetectTimer;
 };
 
-CInputStreamRTMP::CInputStreamRTMP(KODI_HANDLE instance, const std::string& kodiVersion)
-  : CInstanceInputStream(instance, kodiVersion),
+CInputStreamRTMP::CInputStreamRTMP(const kodi::addon::IInstanceInfo& instance)
+  : CInstanceInputStream(instance),
     m_readPauseDetectTimer(this)
 {
 }
@@ -162,21 +162,18 @@ bool CInputStreamRTMP::PosTime(int ms)
 
 /*****************************************************************************************************/
 
-class ATTRIBUTE_HIDDEN CMyAddon
+class ATTR_DLL_LOCAL CMyAddon
   : public kodi::addon::CAddonBase
 {
 public:
   CMyAddon() = default;
-  ADDON_STATUS CreateInstance(int instanceType,
-                              const std::string& instanceID,
-                              KODI_HANDLE instance,
-                              const std::string& version,
-                              KODI_HANDLE& addonInstance) override
+  ADDON_STATUS CreateInstance(const kodi::addon::IInstanceInfo& instance,
+                              KODI_ADDON_INSTANCE_HDL& hdl) override
 
   {
-    if (instanceType == ADDON_INSTANCE_INPUTSTREAM)
+    if (instance.IsType(ADDON_INSTANCE_INPUTSTREAM))
     {
-      addonInstance = new CInputStreamRTMP(instance, version);
+      hdl = new CInputStreamRTMP(instance);
       return ADDON_STATUS_OK;
     }
     return ADDON_STATUS_NOT_IMPLEMENTED;
