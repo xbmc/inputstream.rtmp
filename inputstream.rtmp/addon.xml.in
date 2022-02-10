@@ -70,6 +70,7 @@ v3.0.3
     <summary lang="es_ES">Cliente para flujos RTMP</summary>
     <summary lang="es_MX">Cliente para flujos RTMP</summary>
     <summary lang="fi_FI">Asiakasohjelma RTMP-streameille</summary>
+    <summary lang="hr_HR">Klijent za RTMP tokove</summary>
     <summary lang="ko_KR">RTMP 스트림용 클라이언트</summary>
     <summary lang="pl_PL">Klient strumieni RTMP</summary>
     <summary lang="zh_CN">RTMP 流的客户端</summary>
@@ -79,6 +80,7 @@ v3.0.3
     <description lang="es_ES">El Protocolo de Mensajería en Tiempo Real (RTMP) es un protocolo de red propietario desarrollado por Adobe Inc. para transmitir audio, vídeo y otros datos por Internet desde un servidor de contenido a un reproductor flash.[CR][CR]Este addon implementa el soporte para RTMP en Kodi y para el resto de addons instalados.</description>
     <description lang="es_MX">El Protocolo de Mensajería en Tiempo Real (RTMP) es un protocolo de red propietario desarrollado por Adobe Inc. para transmitir audio, video y otros datos por internet desde un servidor de medios a un reproductor flash.[CR][CR]Este complemento implementa el soporte de reproducción RTMP para Kodi y para cualquier complemento instalado.</description>
     <description lang="fi_FI">Real Time Messaging Protocol (RTMP) on Adobe Inc:n kehittämä verkkoprotokolla äänen, videon ja muun tiedon siirtämiseen Internetin kautta mediapalvelimelta flash-soittimeen.[CR][CR]Tämä lisäosa toteuttaa RTMP-suoratoistotuen Kodille ja asennetuille lisäosille.</description>
+    <description lang="hr_HR">Protokol za slanje poruka u stvarnom vremenu (Real Time Messaging Protocol / RTMP) zakonom je zaštićeni mrežni protokol razvijen od strane Adobe Inc. za odašiljanje zvuka, videa i ostalih podataka preko interneta s medijskog poslužitelja prema Flash izvođaču.[CR][CR]Ovaj dodatak implementira podršku za RTMP strujanje za Kodi i instalirane dodatke.</description>
     <description lang="ko_KR">실시간 메시징 프로토콜(RTMP)은 인터넷을 통해 미디어 서버에서 플래시 플레이어로 오디오, 비디오 및 기타 데이터를 전송하기 위해 Adobe Inc.에서 개발한 독점 네트워크 프로토콜입니다.[CR][CR]이 애드온은 Kodi와 설치된 애드온을 위한 RTMP 스트리밍 지원을 구현합니다.</description>
     <description lang="pl_PL">Protokół RTMP (Real Time Messaging Protocol) to własnościowy protokół sieciowy opracowany przez firmę Adobe Inc. do przesyłania dźwięku, obrazu i innych danych przez Internet z serwera multimediów do odtwarzacza Flash.[CR][CR]Ten dodatek implementuje obsługę przesyłania strumieniowego RTMP dla Kodi i zainstalowanych dodatków.</description>
     <description lang="zh_CN">实时消息协议（RTMP）是 Adobe Inc. 开发的一种专有网络协议，用于通过互联网将音频、视频和其他数据从媒体服务器传输到 flash 播放器。[CR][CR]此插件实现对 Kodi 和已安装插件的 RTMP 流支持。</description>
