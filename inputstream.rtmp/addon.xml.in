@@ -64,7 +64,7 @@ v3.0.4
 v3.0.3
 - Matrix API change to v2.2.0 - Allows upto 256 streams
     </news>
-    <summary lang="cs_CZ">Klient pro přenosy RTMP</summary>
+    <summary lang="cs_CZ">Klient přenosů RTMP</summary>
     <summary lang="da_DK">Klient til RTMP-streams</summary>
     <summary lang="de_DE">Client für RTMP-Streams</summary>
     <summary lang="en_GB">Client for RTMP streams</summary>
@@ -75,6 +75,7 @@ v3.0.3
     <summary lang="ko_KR">RTMP 스트림용 클라이언트</summary>
     <summary lang="pl_PL">Klient strumieni RTMP</summary>
     <summary lang="zh_CN">RTMP 流的客户端</summary>
+    <description lang="cs_CZ">Real Time Messaging Protocol (RTMP) je patentovaný síťový protokol vyvinutý společností Adobe Inc. pro přenos zvuku, videa a dalších dat přes internet z multimediálního serveru do přehrávače.[CR][CR]Tento doplněk implementuje podporu proudů RTMP pro Kodi a instalované doplňky.</description>
     <description lang="da_DK">Real Time Messaging Protocol (RTMP) er en proprietær netværksprotokol udviklet af Adobe Inc. til at overføre lyd, video og andre data via internettet fra en medieserver til en flashafspiller.[CR][CR]Dette add-on implementerer RTMP-understøttelse af streaming til Kodi og installerede add-ons.</description>
     <description lang="de_DE">Das Real Time Messaging Protocol (RTMP) ist ein proprietäres Netzwerkprotokoll, das von Adobe Inc. entwickelt wurde, um Audio-, Video- und andere Daten über das Internet von einem Medienserver zu einem Flash Player zu übertragen.[CR][CR]Dieses Addon implementiert die RTMP-Streaming-Unterstützung für Kodi und installierte Add-Ons.</description>
     <description lang="en_GB">The Real Time Messaging Protocol (RTMP) is a proprietary network protocol developed by Adobe Inc. to transmit audio, video and other data over the Internet from a media server to a flash player.[CR][CR]This addon implements RTMP streaming support for Kodi and installed add-ons.</description>
