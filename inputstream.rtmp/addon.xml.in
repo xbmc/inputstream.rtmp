@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="inputstream.rtmp"
-  version="20.2.1"
+  version="20.3.0"
   name="RTMP Input"
   provider-name="spiff">
   <requires>@ADDON_DEPENDS@</requires>
