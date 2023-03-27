@@ -1,1 +1,1 @@
-librtmp http://mirrors.xbmc.org/build-deps/sources/rtmpdump-fa8646daeb19dfd12c181f7d19de708d623704c0.tar.gz
+librtmp http://git.ffmpeg.org/gitweb/rtmpdump.git/snapshot/f1b83c10d8beb43fcc70a6e88cf4325499f25857.tar.gz
