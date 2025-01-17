@@ -1,3 +1,7 @@
+v21.1.1
+- Translations updates from Weblate
+	- af_za, es_es, et_ee, fr_fr, it_it, lv_lv, sk_sk
+
 v21.1.0
 - Kodi inputstream API update to version 3.3.0
 
