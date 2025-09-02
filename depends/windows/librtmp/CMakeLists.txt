@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.5)
 project(librtmp C CXX)
 
 add_definitions(
+	-DOPENSSL_API_COMPAT=0x10100000L
 	-DUSE_OPENSSL
 	-D_CRT_NONSTDC_NO_DEPRECATE
 	-D_CRT_SECURE_NO_WARNINGS
