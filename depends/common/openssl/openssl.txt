@@ -1,1 +1,1 @@
-openssl https://mirrors.kodi.tv/build-deps/sources/openssl-1.1.1n.tar.gz
+openssl https://github.com/openssl/openssl/releases/download/openssl-3.5.2/openssl-3.5.2.tar.gz
