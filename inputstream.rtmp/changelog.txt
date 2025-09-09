@@ -1,3 +1,8 @@
+v22.0.2
+- Kodi inputstream API update to version 3.4.0
+- Translation updates by Weblate
+- Update dependencies (openssl, zlib)
+
 v21.1.0
 - Kodi inputstream API update to version 3.3.0
 
