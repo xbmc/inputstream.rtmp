@@ -1,0 +1,38 @@
+Subject: [PATCH] Fix OpenSSL Diffie-Hellman initialization and private key length
+
+Initialize BIGNUM inputs before BN_hex2bn, which may reuse an existing value.
+Let OpenSSL choose a valid private exponent length for the RTMPE group rather
+than overriding it with the modulus size, which OpenSSL 3 rejects. Keep the
+protocol group and public-key validation unchanged.
+
+--- a/librtmp/dh.h
++++ b/librtmp/dh.h
+@@ -268,7 +268,7 @@
+ {
+   size_t res;
+   MDH *dh = MDH_new();
+-  MP_t g, p;
++  MP_t g, p = NULL;
+
+   if (!dh)
+     goto failed;
+@@ -287,7 +287,10 @@
+   MP_set_w(g, 2);	/* base 2 */
+   MP_setpg(dh, p, g);
+
++  /* OpenSSL sizes the private exponent from p/q; nKeyBits is the modulus size. */
++#if !defined(USE_OPENSSL)
+   MP_setlength(dh, nKeyBits);
++#endif
+   return dh;
+
+ failed:
+@@ -300,7 +303,7 @@
+ static int
+ DHGenerateKey(MDH *dh)
+ {
+-  MP_t q1;
++  MP_t q1 = NULL;
+   size_t res;
+   if (!dh)
+     return 0;

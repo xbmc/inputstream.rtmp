@@ -1,0 +1,76 @@
+Subject: [PATCH] Preserve UWP cache location and supported clock API
+
+Use the complete app-local path once, including its UTF-8 terminator. Handle
+conversion/allocation failure and free the temporary path. Desktop Windows
+also tolerates an absent HOMEDRIVE environment variable.
+
+--- a/librtmp/hashswf.c
++++ b/librtmp/hashswf.c
+@@ -488,8 +488,17 @@
+   hpre.av_val = "Q:";
+   hpre.av_len = 2;
+   home.av_val = "\\UserData";
++#elif defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_APP)
++  extern char *get_home_path(void);
++  hpre.av_val = "";
++  hpre.av_len = 0;
++  home.av_val = get_home_path();
++  if (!home.av_val)
++    return -1;
+ #else
+   hpre.av_val = getenv("HOMEDRIVE");
++  if (!hpre.av_val)
++    hpre.av_val = "";
+   hpre.av_len = strlen(hpre.av_val);
+   home.av_val = getenv("HOMEPATH");
+ #endif
+@@ -516,7 +525,13 @@
+    * besides URL are fixed size.
+    */
+   path = malloc(hpre.av_len + home.av_len + sizeof(DIRSEP ".swfinfo"));
+-  sprintf(path, "%s%s" DIRSEP ".swfinfo", hpre.av_val, home.av_val);
++  if (path)
++    sprintf(path, "%s%s" DIRSEP ".swfinfo", hpre.av_val, home.av_val);
++#if defined(_WIN32) && defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_APP)
++  free(home.av_val);
++#endif
++  if (!path)
++    return -1;
+
+   f = fopen(path, "r+");
+   while (f)
+--- a/librtmp/rtmp.c
++++ b/librtmp/rtmp.c
+@@ -159,7 +159,7 @@
+ #ifdef _DEBUG
+   return 0;
+ #elif defined(_WIN32)
+-  return timeGetTime();
++  return (unsigned int)GetTickCount64();
+ #else
+   struct tms t;
+   if (!clk_tck) clk_tck = sysconf(_SC_CLK_TCK);
+--- /dev/null
++++ b/librtmp/uwpapi.cpp
+@@ -0,0 +1,21 @@
++#include <windows.h>
++#include <stdlib.h>
++
++#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_APP)
++extern "C" char *get_home_path(void)
++{
++  auto path = Windows::Storage::ApplicationData::Current->LocalFolder->Path;
++  int length = WideCharToMultiByte(CP_UTF8, 0, path->Data(), -1, NULL, 0, NULL, NULL);
++  if (length <= 0)
++    return NULL;
++  char *result = (char *)malloc(length);
++  if (!result)
++    return NULL;
++  if (!WideCharToMultiByte(CP_UTF8, 0, path->Data(), -1, result, length, NULL, NULL))
++  {
++    free(result);
++    return NULL;
++  }
++  return result;
++}
++#endif

@@ -1,61 +1,29 @@
-cmake_minimum_required(VERSION 3.5)
-
+cmake_minimum_required(VERSION 3.15)
 project(librtmp C CXX)
-
-add_definitions(
-	-DOPENSSL_API_COMPAT=0x10100000L
-	-DUSE_OPENSSL
-	-D_CRT_NONSTDC_NO_DEPRECATE
-	-D_CRT_SECURE_NO_WARNINGS
-	-D_WINSOCK_DEPRECATED_NO_WARNINGS
-)
+include(${CMAKE_CURRENT_SOURCE_DIR}/../../common/librtmp/FetchSource.cmake)
 
 find_package(OpenSSL REQUIRED)
-find_package(ZLib REQUIRED)
+find_package(ZLIB REQUIRED)
 
-include_directories(
-	${CMAKE_SOURCE_DIR}/librtmp
-	${OPENSSL_INCLUDE_DIR}
-	${ZLIB_INCLUDE_DIRS}
-)
+add_library(librtmp STATIC
+  ${rtmpdump_SOURCE_DIR}/librtmp/amf.c
+  ${rtmpdump_SOURCE_DIR}/librtmp/hashswf.c
+  ${rtmpdump_SOURCE_DIR}/librtmp/log.c
+  ${rtmpdump_SOURCE_DIR}/librtmp/parseurl.c
+  ${rtmpdump_SOURCE_DIR}/librtmp/rtmp.c)
+target_compile_definitions(librtmp PRIVATE
+  USE_OPENSSL OPENSSL_API_COMPAT=0x10100000L
+  _CRT_NONSTDC_NO_DEPRECATE _CRT_SECURE_NO_WARNINGS
+  _WINSOCK_DEPRECATED_NO_WARNINGS RTMPDUMP_VERSION="v2.6")
+# _DEBUG enables upstream test handshakes and tool-only packet dump streams.
+target_compile_options(librtmp PRIVATE /U_DEBUG)
+target_link_libraries(librtmp PRIVATE OpenSSL::SSL OpenSSL::Crypto ZLIB::ZLIB Ws2_32 winmm)
 
-add_library(librtmp
-	librtmp/amf.h
-	librtmp/amf.c
-	librtmp/bytes.h
-	librtmp/dh.h
-	librtmp/dhgroups.h
-	librtmp/handshake.h
-	librtmp/hashswf.c
-	librtmp/http.h
-	librtmp/log.h
-	librtmp/log.c
-	librtmp/parseurl.c
-	librtmp/rtmp.h
-	librtmp/rtmp.c
-	librtmp/rtmp_sys.h
-)
 if(MSVC AND CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-  target_sources(librtmp PRIVATE
-    librtmp/uwpapi.cpp
-  )
-  set_source_files_properties(librtmp/uwpapi.cpp PROPERTIES COMPILE_FLAGS "/TP /ZW")
+  target_sources(librtmp PRIVATE ${rtmpdump_SOURCE_DIR}/librtmp/uwpapi.cpp)
+  set_source_files_properties(${rtmpdump_SOURCE_DIR}/librtmp/uwpapi.cpp PROPERTIES COMPILE_FLAGS "/TP /ZW")
 endif()
 
-target_link_libraries(librtmp ${OPENSSL_LIBRARIES} ${ZLIB_LIBRARIES} Ws2_32 winmm gdi32)
-
-target_compile_options(librtmp PRIVATE -DEXPORT)
-
-install(TARGETS librtmp
-	RUNTIME DESTINATION bin
-	LIBRARY DESTINATION lib
-	ARCHIVE DESTINATION lib
-)
-
-install(FILES
-	librtmp/amf.h
-	librtmp/http.h
-	librtmp/log.h
-	librtmp/rtmp.h
-	DESTINATION include/librtmp
-)
+install(TARGETS librtmp ARCHIVE DESTINATION lib)
+install(FILES ${rtmpdump_SOURCE_DIR}/librtmp/amf.h ${rtmpdump_SOURCE_DIR}/librtmp/http.h ${rtmpdump_SOURCE_DIR}/librtmp/log.h ${rtmpdump_SOURCE_DIR}/librtmp/rtmp.h
+        DESTINATION include/librtmp)
